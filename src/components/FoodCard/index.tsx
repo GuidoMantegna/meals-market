@@ -22,9 +22,12 @@ const FoodCard: React.FunctionComponent<IFoodCardProps> = (props) => {
     <>
       <Box
         w="100%"
-        /*h={['auto', '40vh']}*/ boxShadow="1px 1px 2px 1px #c6c6c6"
+        /*h={['auto', '40vh']}*/ 
+        // boxShadow="1px 1px 2px 1px #c6c6c6"
         borderRadius={10}
+        border="1px solid #CDCDCD"
         p="30px 10px"
+        bg='white'
       >
         <Box w="100%" h="100%">
           {/* IMAGE MAIN */}

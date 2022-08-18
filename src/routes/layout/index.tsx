@@ -1,9 +1,8 @@
-import { Header, Navbar, Footer, UserBadge } from "../components";
+import { Header, Navbar, Footer, UserBadge } from "../../components";
 import { Flex, useMediaQuery } from "@chakra-ui/react";
 import { Outlet } from "react-router-dom";
 
 type LayoutProps = {
-  children: React.ReactNode;
 };
 
 const Layout: React.FunctionComponent<LayoutProps> = (props) => {
@@ -13,7 +12,7 @@ const Layout: React.FunctionComponent<LayoutProps> = (props) => {
     <>
       <Flex
         p={{ base: "0", sm: "0 5%", md: "0 15%" }}
-        bg="gray.100"
+        // bg="gray.100"
         direction="column"
         minHeight="100vh"
         w="100%"
