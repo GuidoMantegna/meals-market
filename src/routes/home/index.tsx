@@ -1,33 +1,26 @@
 import * as React from "react";
-import { useState } from "react";
-import { FoodCard } from "../../components";
+import { useState, Suspense } from "react";
+// import { FoodCard } from "../../components";
 import { Flex, Select, Skeleton, Box } from "@chakra-ui/react";
-import { useCategories } from "../../customHooks";
-import { Category } from "../../types";
+import { useCategories, useMeals } from "../../customHooks";
+import { Category, Meal } from "../../types";
 
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/effect-cards";
+import "./styles.scss";
 // import required modules
 import { EffectCards } from "swiper";
 const axios = require("axios");
+const FoodCard = React.lazy(() => import('../../components/FoodCard'))
 
 interface IHomeProps {}
 
 const Home: React.FunctionComponent<IHomeProps> = (props) => {
   const { loadingCategories, catError, categories } = useCategories();
-  const [meals, setMeals] = useState();
-
-  const fetchMeals = async (url: string) => {
-    try {
-      const response = await axios.get(url);
-      setMeals(response.data.meals);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const { loadingMeals, mealsError, meals, fetchMeals } = useMeals();
 
   // const handleChange = (e: React.ChangeEventHandler<HTMLSelectElement>) => {
   const handleChange = (e: any) => {
@@ -60,26 +53,24 @@ const Home: React.FunctionComponent<IHomeProps> = (props) => {
             })}
           </Select>
         </Skeleton>
-        <Box w="300px">
-          <Swiper
-            // spaceBetween={50}
-            // slidesPerView={1}
-            // onSlideChange={() => console.log("slide change")}
-            // onSwiper={(swiper) => console.log(swiper)}
-            effect={"cards"}
-            grabCursor={true}
-            modules={[EffectCards]}
-            // className="mySwiper"
-          >
-            <SwiperSlide>
-              <FoodCard />
-            </SwiperSlide>
-            <SwiperSlide>
-              <FoodCard />
-            </SwiperSlide>
+        {loadingMeals === "idle" && <FoodCard status="idle" title='Search you favourite meal'/>}
+        {loadingMeals === "loading" && <FoodCard status="loading" title='Search you favourite meal'/>}
+        <Box w="95%" maxW="330px">
+          <Swiper effect={"cards"} grabCursor={true} modules={[EffectCards]}>
+            {meals?.map((meal: Meal) => {
+              return (
+                <SwiperSlide key={meal.idMeal}>
+                  <Suspense fallback={<FoodCard status="loading" title='Search you favourite meal'/>}>
+                    <FoodCard title={meal.strMeal} img={meal.strMealThumb} status="complete" />
+                  </Suspense>
+                </SwiperSlide>
+                // <SwiperSlide key={meal.idMeal}>
+                //     <FoodCard title={meal.strMeal} img={meal.strMealThumb} status="complete" />
+                // </SwiperSlide>
+              );
+            })}
           </Swiper>
         </Box>
-        {/* <FoodCard/> */}
       </Flex>
     </>
   );
