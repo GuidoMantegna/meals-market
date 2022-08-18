@@ -60,16 +60,16 @@ const Home: React.FunctionComponent<IHomeProps> = (props) => {
             })}
           </Select>
         </Skeleton>
-        <Box w='100%'>
+        <Box w="300px">
           <Swiper
             // spaceBetween={50}
             // slidesPerView={1}
             // onSlideChange={() => console.log("slide change")}
             // onSwiper={(swiper) => console.log(swiper)}
             effect={"cards"}
-        grabCursor={true}
-        modules={[EffectCards]}
-        // className="mySwiper"
+            grabCursor={true}
+            modules={[EffectCards]}
+            // className="mySwiper"
           >
             <SwiperSlide>
               <FoodCard />
