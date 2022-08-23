@@ -14,3 +14,10 @@ export type Response = {
     status: number,
     statusText: string,
 }
+export type Action = {
+    type: string,
+    payload: any,
+}
+export type State = {
+    items: number,
+}

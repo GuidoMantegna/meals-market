@@ -1,6 +1,6 @@
-// snippet tsrsfc
-
 import * as React from "react";
+import { useAppSelector, useAppDispatch } from "store/hooks";
+import { decrement, increment } from 'store/features/counter'
 import {
   Box,
   Image,
@@ -11,11 +11,11 @@ import {
   Grid,
   Icon,
   Button,
-  Spinner,
+  useColorMode,
 } from "@chakra-ui/react";
 import { AiOutlineStar } from "react-icons/ai";
-import CardBack from "../../images/form-background.jpg";
-import ImgFallback from "../../images/spinner.gif"
+import CardBack from "images/form-background.jpg";
+import ImgFallback from "images/spinner.gif";
 
 interface IFoodCardProps {
   title: string;
@@ -28,38 +28,27 @@ const FoodCard: React.FunctionComponent<IFoodCardProps> = ({
   img,
   status,
 }) => {
+  const { colorMode, toggleColorMode } = useColorMode()
+  const dispatch = useAppDispatch()
+  const count = useAppSelector((state) => state.counter.value)
+
+  const handleClick = (e: any) => {
+    const name = e.target.textContent
+    name === "+" ?
+    dispatch(increment()) :
+    dispatch(decrement())
+  }
   return (
     <>
       {status === "idle" || status === "loading" ? (
         <Box
-          w="100%"
-          /*h={['auto', '40vh']}*/
+          w="90%"
           // boxShadow="1px 1px 2px 1px #c6c6c6"
           borderRadius={10}
           border="1px solid #CDCDCD"
           p="30px 10px"
           bg="white"
         >
-          {status === "loading" && (
-            <Center
-              pos="absolute"
-              w="100%"
-              h="100%"
-              top={0}
-              left={0}
-              bg="whiteAlpha.800"
-              zIndex={1}
-              borderRadius={10}
-            >
-              <Spinner
-                thickness="4px"
-                speed="0.65s"
-                emptyColor="gray.200"
-                color="teal"
-                size="xl"
-              />
-            </Center>
-          )}
           <Box w="100%" h="100%">
             {/* IMAGE MAIN */}
             <Box pos="relative">
@@ -72,31 +61,12 @@ const FoodCard: React.FunctionComponent<IFoodCardProps> = ({
                 bg="white"
                 opacity="85%"
                 borderRadius="0 5px 5px 0"
-                w="80%"
+                w="100%"
                 p="10px 20px"
               >
-                <Heading as="h2" size="md">
+                <Heading as="h2" size="md" textAlign="center">
                   {title}
                 </Heading>
-                {/* <Text as="h2" fontSize="xs">
-                avocado, rice, chicken, tomato, korn
-              </Text> */}
-              </Box>
-              {/* PRICE */}
-              <Box
-                pos="absolute"
-                top="7"
-                right="0"
-                bg="red.500"
-                opacity="75%"
-                borderRadius="5px 0 0 5px"
-                w="25%"
-                h="30px"
-                p={2}
-              >
-                {/* <Heading as="h2" size="sm" textAlign="center" color="white">
-                  $2,35
-                </Heading> */}
               </Box>
               {/* QTY SELECTOR */}
               <Center>
@@ -120,7 +90,7 @@ const FoodCard: React.FunctionComponent<IFoodCardProps> = ({
                     borderColor="white"
                     fontWeight="bold"
                   >
-                    0
+                    {count}
                   </Center>
                   <Center w="100%" p={1}>
                     +
@@ -151,24 +121,32 @@ const FoodCard: React.FunctionComponent<IFoodCardProps> = ({
       ) : (
         <Box
           w="100%"
-          /*h={['auto', '40vh']}*/
           // boxShadow="1px 1px 2px 1px #c6c6c6"
           borderRadius={10}
-          border="1px solid #CDCDCD"
+          border={colorMode === "light" ? "1px solid #CDCDCD" : "1px solid #5b5b5b"}
           p="30px 10px"
-          bg="white"
+          // bg="white"
+          bgColor={colorMode === "light" ? "white" : "gray.700"}
+
         >
           <Box w="100%" h="100%">
             {/* IMAGE MAIN */}
             <Box pos="relative">
-              <Image src={img} alt={title} w="100%" minH="300px" fallbackSrc={ImgFallback}/>
+              <Image
+                src={img}
+                alt={title}
+                w="100%"
+                minH="300px"
+                fallbackSrc={ImgFallback}
+              />
               {/* FOOD DESC. */}
               <Box
                 pos="absolute"
                 top="10"
                 left="0"
-                bg="white"
-                opacity="75%"
+                bgColor={colorMode === "light" ? "whiteAlpha.700" : "blackAlpha.700"}
+                // bg="white"
+                // opacity="75%"
                 borderRadius="0 5px 5px 0"
                 w="80%"
                 p="10px 20px"
@@ -206,9 +184,12 @@ const FoodCard: React.FunctionComponent<IFoodCardProps> = ({
                   w="110px"
                   color="white"
                 >
-                  <Center w="100%" p={1}>
+                  <Center w="100%" p={1} onClick={e => handleClick(e)}>
                     -
                   </Center>
+                  {/* <Button w="100%" p={1} variant='ghost' colorScheme='whatsapp' >
+                    -
+                  </Button> */}
                   <Center
                     w="100%"
                     p={1}
@@ -217,11 +198,14 @@ const FoodCard: React.FunctionComponent<IFoodCardProps> = ({
                     borderColor="white"
                     fontWeight="bold"
                   >
-                    0
+                    {count}
                   </Center>
-                  <Center w="100%" p={1}>
+                  <Center w="100%" p={1} onClick={e => handleClick(e)}>
                     +
                   </Center>
+                  {/* <Button w="100%" p={1} variant='ghost' colorScheme='whatsapp' >
+                    +
+                  </Button> */}
                 </Grid>
               </Center>
             </Box>

@@ -6,3 +6,4 @@ export { default as Footer } from './Footer';
 export { default as FoodCard } from './FoodCard';
 export { default as UserBadge } from './UserBadge';
 export { default as ColorModeSwitcher } from './ColorModeSwitcher';
+export { default as LoadingModal } from './LoadingModal';

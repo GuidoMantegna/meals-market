@@ -8,6 +8,7 @@ import {
   StackDivider,
   Link,
   useMediaQuery,
+  useColorMode,
 } from "@chakra-ui/react";
 import { FiMenu } from "react-icons/fi";
 import { RiMapPinUserFill } from "react-icons/ri";
@@ -18,11 +19,13 @@ interface NavbarProps {}
 const Navbar: React.FunctionComponent<NavbarProps> = (props) => {
   const [isLarge] = useMediaQuery("(min-width: 540px)");
   const location = useLocation();
+  const { colorMode } = useColorMode()
 
   return (
     <>
       <Flex
-        bg="gray.800"
+        // bg="gray.800"
+        bgColor={colorMode === "light" ? "gray.800" : "blackAlpha.900"}
         color="gray.300"
         w="100%"
         p="15px 20px"
