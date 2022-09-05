@@ -1,5 +1,6 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createEntityAdapter, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from 'store'
+import { Ingredient } from 'types'
 
 // Define a type for the slice state
 interface CounterState {

@@ -1,3 +1,7 @@
+[Redux & React Router](https://es.redux.js.org/docs/avanzado/uso-con-react-router.html#uso-con-react-router)
+
+[Redux & TypeScript](https://react-redux.js.org/tutorials/typescript-quick-start)
+
 This project was bootstrapped with
 [Create React App](https://github.com/facebook/create-react-app).
 

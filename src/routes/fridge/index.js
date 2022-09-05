@@ -5,6 +5,7 @@ import FridgeContain from '../../components/FridgeContain';
 
 function Fridge () {
 
+    useEffect(() => console.log("RENDER FRIDGE"), [])
     let allProductsInDB = [];   
     const [fridge, setFridge] = useState([]);
     let db;

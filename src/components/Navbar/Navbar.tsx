@@ -43,10 +43,17 @@ const Navbar: React.FunctionComponent<NavbarProps> = (props) => {
             >
               <Link
                 as={RouterLink}
-                to="/"
-                fontWeight={location.pathname === "/" ? "semibold" : "light"}
+                to="/market"
+                fontWeight={location.pathname === "/market" ? "semibold" : "light"}
               >
-                Home
+                Market
+              </Link>
+              <Link
+                as={RouterLink}
+                to="/meals"
+                fontWeight={location.pathname === "/meals" ? "semibold" : "light"}
+              >
+                Meals
               </Link>
               <Link
                 as={RouterLink}

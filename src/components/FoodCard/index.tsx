@@ -1,6 +1,7 @@
 import * as React from "react";
 import { useAppSelector, useAppDispatch } from "store/hooks";
-import { decrement, increment } from 'store/features/counter'
+import { decrement, increment } from "store/features/counter";
+import { Link, Outlet } from "react-router-dom";
 import {
   Box,
   Image,
@@ -21,23 +22,27 @@ interface IFoodCardProps {
   title: string;
   img?: string;
   status: string;
+  id: string;
 }
 
 const FoodCard: React.FunctionComponent<IFoodCardProps> = ({
   title,
   img,
   status,
+  id,
 }) => {
-  const { colorMode, toggleColorMode } = useColorMode()
-  const dispatch = useAppDispatch()
-  const count = useAppSelector((state) => state.counter.value)
+  const { colorMode, toggleColorMode } = useColorMode();
+  const dispatch = useAppDispatch();
+  const count = useAppSelector((state) => state.counter.value);
 
-  const handleClick = (e: any) => {
-    const name = e.target.textContent
-    name === "+" ?
-    dispatch(increment()) :
-    dispatch(decrement())
-  }
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    const button: HTMLButtonElement = e.currentTarget;
+    const { name, textContent } = button;
+
+    textContent === "+" ? dispatch(increment()) : dispatch(decrement());
+  };
   return (
     <>
       {status === "idle" || status === "loading" ? (
@@ -123,11 +128,12 @@ const FoodCard: React.FunctionComponent<IFoodCardProps> = ({
           w="100%"
           // boxShadow="1px 1px 2px 1px #c6c6c6"
           borderRadius={10}
-          border={colorMode === "light" ? "1px solid #CDCDCD" : "1px solid #5b5b5b"}
+          border={
+            colorMode === "light" ? "1px solid #CDCDCD" : "1px solid #5b5b5b"
+          }
           p="30px 10px"
           // bg="white"
           bgColor={colorMode === "light" ? "white" : "gray.700"}
-
         >
           <Box w="100%" h="100%">
             {/* IMAGE MAIN */}
@@ -144,7 +150,9 @@ const FoodCard: React.FunctionComponent<IFoodCardProps> = ({
                 pos="absolute"
                 top="10"
                 left="0"
-                bgColor={colorMode === "light" ? "whiteAlpha.700" : "blackAlpha.700"}
+                bgColor={
+                  colorMode === "light" ? "whiteAlpha.700" : "blackAlpha.700"
+                }
                 // bg="white"
                 // opacity="75%"
                 borderRadius="0 5px 5px 0"
@@ -154,9 +162,10 @@ const FoodCard: React.FunctionComponent<IFoodCardProps> = ({
                 <Heading as="h2" size="md">
                   {title}
                 </Heading>
-                {/* <Text as="h2" fontSize="xs">
-                  avocado, rice, chicken, tomato, korn
-                </Text> */}
+                <Link to={`/market/${id}`}>
+                {/* <Link to={id}> */}
+                  + More Info
+                </Link>
               </Box>
               {/* PRICE */}
               <Box
@@ -184,12 +193,17 @@ const FoodCard: React.FunctionComponent<IFoodCardProps> = ({
                   w="110px"
                   color="white"
                 >
-                  <Center w="100%" p={1} onClick={e => handleClick(e)}>
+                  <Button
+                    name={title}
+                    onClick={handleClick}
+                    variant="ghost"
+                    colorScheme="whatsapp"
+                    color="white"
+                    _hover={{ bgColor: "transparent" }}
+                    borderRadius="5px 0 0 5px"
+                  >
                     -
-                  </Center>
-                  {/* <Button w="100%" p={1} variant='ghost' colorScheme='whatsapp' >
-                    -
-                  </Button> */}
+                  </Button>
                   <Center
                     w="100%"
                     p={1}
@@ -200,12 +214,17 @@ const FoodCard: React.FunctionComponent<IFoodCardProps> = ({
                   >
                     {count}
                   </Center>
-                  <Center w="100%" p={1} onClick={e => handleClick(e)}>
+                  <Button
+                    name={title}
+                    onClick={handleClick}
+                    variant="ghost"
+                    colorScheme="whatsapp"
+                    color="white"
+                    _hover={{ bgColor: "transparent" }}
+                    borderRadius="0 5px 5px 0"
+                  >
                     +
-                  </Center>
-                  {/* <Button w="100%" p={1} variant='ghost' colorScheme='whatsapp' >
-                    +
-                  </Button> */}
+                  </Button>
                 </Grid>
               </Center>
             </Box>

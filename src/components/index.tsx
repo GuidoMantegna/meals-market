@@ -7,3 +7,6 @@ export { default as FoodCard } from './FoodCard';
 export { default as UserBadge } from './UserBadge';
 export { default as ColorModeSwitcher } from './ColorModeSwitcher';
 export { default as LoadingModal } from './LoadingModal';
+export { default as IngItem } from './IngItem';
+export { default as MiniFridge } from './MiniFridge';
+export { default as FridgeItem } from './FridgeItem';

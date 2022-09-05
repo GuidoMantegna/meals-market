@@ -10,7 +10,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/effect-cards";
-import "./styles.scss";
+// import "./styles.scss";
 // import required modules
 import { EffectCards } from "swiper";
 
@@ -21,19 +21,20 @@ const axios = require("axios");
 interface IHomeProps {}
 
 const Home: React.FunctionComponent<IHomeProps> = (props) => {
-  const { loadingCategories, catError, categories } = useCategories();
-  const { loadingMeals, mealsError, meals, fetchMeals } = useMeals();
+  // const { loadingCategories, catError, categories } = useCategories();
+  // const { loadingMeals, mealsError, meals, fetchMeals } = useMeals();
 
   // const handleChange = (e: React.ChangeEventHandler<HTMLSelectElement>) => {
-  const handleChange = (e: any) => {
-    fetchMeals(
-      `https://www.themealdb.com/api/json/v1/1/filter.php?c=${e.target.value}`
-    );
-  };
+  // const handleChange = (e: any) => {
+  //   fetchMeals(
+  //     `https://www.themealdb.com/api/json/v1/1/filter.php?c=${e.target.value}`
+  //   );
+  // };
 
   return (
     <>
-      <Flex
+      <Box>HOME</Box>
+      {/* <Flex
         w={{ base: "95%", sm: "85%", md: "75%", lg: "80%" }}
         direction={{ base: "column" }}
         align="center"
@@ -83,7 +84,7 @@ const Home: React.FunctionComponent<IHomeProps> = (props) => {
             })}
           </Swiper>
         </Box>
-      </Flex>
+      </Flex> */}
     </>
   );
 };

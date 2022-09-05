@@ -1,5 +1,5 @@
-import { Category, Response } from "../../types";
 import React, { useState, useEffect } from "react";
+import { Category, Response } from "../../types";
 const axios = require("axios");
 
 const useCategories = () => {

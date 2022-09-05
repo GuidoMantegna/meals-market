@@ -1,4 +1,4 @@
-import { Header, Navbar, Footer, UserBadge } from "../../components";
+import { Header, Navbar, Footer, UserBadge, MiniFridge } from "components";
 import { Flex, useMediaQuery } from "@chakra-ui/react";
 import { Outlet } from "react-router-dom";
 
@@ -27,10 +27,11 @@ const Layout: React.FunctionComponent<LayoutProps> = (props) => {
         <Flex align="center" justify="center" p={2} grow={1} overflow='hidden'>
           {isLargerThan1280 && (
             <Flex grow={1} justify="center">
-              <UserBadge />
+              {/* <UserBadge /> */}
+              <MiniFridge />
             </Flex>
           )}
-          <Flex grow={2} justifyContent="center" w="100%">
+          <Flex grow={2} justifyContent="center">
             <Outlet />
           </Flex>
         </Flex>
