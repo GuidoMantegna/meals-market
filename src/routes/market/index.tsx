@@ -13,9 +13,12 @@ import {
   VStack,
   Skeleton,
   Flex,
+  FormLabel,
+  FormControl,
+  Switch,
 } from "@chakra-ui/react";
 // REDUX
-import { useAppDispatch } from "store/hooks";
+import { useAppDispatch, useAppSelector } from "store/hooks";
 import { addProduct } from "store/features/products";
 
 import { BsSearch } from "react-icons/bs";
@@ -29,15 +32,24 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
   const [search, setSearch] = useState<string>("");
   const [searching, setSearching] = useState<string>("");
   const [items, setItems] = useState<Ingredient[]>([]);
+  const [onlyFavs, setOnlyFavs] = useState(false);
 
   const dispatch = useAppDispatch();
+  const favs = useAppSelector((state) => state.products.favs);
 
   const searchedItem = useMemo(
-    () =>
-      ingredients.filter((ing) =>
-        ing.strIngredient.toLowerCase().includes(search.toLocaleLowerCase())
-      ),
-    [searching, ingredients]
+    () => {
+      if (onlyFavs) {
+        return ingredients.filter((ing) =>
+          favs[ing.idIngredient] ? ing : null
+        );
+      } else {
+        return ingredients.filter((ing) =>
+          ing.strIngredient.toLowerCase().includes(search.toLocaleLowerCase())
+        );
+      }
+    },
+    [searching, ingredients, onlyFavs]
   );
 
   const addItem = (newIng: Ingredient) => {
@@ -78,7 +90,6 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
           })}
         </MiniFridge>
       </Flex>
-
       <Flex grow={2}>
         <VStack w="95%">
           <InputGroup size="md">
@@ -100,6 +111,12 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
               </Button>
             </InputRightElement>
           </InputGroup>
+          <FormControl display="flex" alignItems="center" justifyContent="center">
+            <FormLabel htmlFor="email-alerts" mb="0">
+              Only Favs
+            </FormLabel>
+            <Switch id="email-alerts" onChange={() => setOnlyFavs(!onlyFavs)} colorScheme='teal'/>
+          </FormControl>
           <VStack
             w="100%"
             p="5px"

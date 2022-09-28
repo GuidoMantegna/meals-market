@@ -3,9 +3,8 @@ import { Flex, HStack, Heading, Image, Button, Icon } from "@chakra-ui/react";
 import { AiOutlineStar, AiFillStar } from "react-icons/ai";
 import { Ingredient } from "types";
 // REDUX
-import { useAppDispatch } from "store/hooks";
+import { useAppDispatch, useAppSelector } from "store/hooks";
 import { addFav } from "store/features/products";
-import { useAppSelector } from "store/hooks";
 
 interface IIngItemProps {
   strIngredient: string;
