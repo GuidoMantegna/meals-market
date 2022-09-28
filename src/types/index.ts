@@ -21,7 +21,8 @@ export type Ingredient = {
   strIngredient: string;
   strDescription: string;
   strType: null,
-  fav: boolean,
+  // fav: boolean,
+  qty: number,
 };
 
 export type Response = {

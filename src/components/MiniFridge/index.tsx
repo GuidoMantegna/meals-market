@@ -3,22 +3,21 @@ import FridgeItem from "components/FridgeItem";
 import {
   Center,
   Icon,
-  Avatar,
-  Heading,
-  Text,
   Divider,
   HStack,
   VStack,
-  StatArrow,
   Button,
-  Flex,
 } from "@chakra-ui/react";
 import { RiFridgeFill, RiArrowUpSFill } from "react-icons/ri";
-import {useAppSelector} from "store/hooks";
+import { useAppSelector } from "store/hooks";
 
-interface IMiniFridgeProps {}
+interface IMiniFridgeProps {
+  children: React.ReactNode;
+}
 
-const MiniFridge: React.FunctionComponent<IMiniFridgeProps> = (props) => {
+const MiniFridge: React.FunctionComponent<IMiniFridgeProps> = ({
+  children,
+}) => {
   const products = useAppSelector((state) => state.products.selectedProducts);
   return (
     <Center flexDirection="column" pos="relative" w="100%">
@@ -39,10 +38,20 @@ const MiniFridge: React.FunctionComponent<IMiniFridgeProps> = (props) => {
         boxShadow="2px 3px 3px rgba(100, 100, 100, .5)"
       >
         <HStack marginBottom="20px">
-          <Button variant="outline" minW="100px" colorScheme="green">
+          <Button
+            variant="outline"
+            minW="100px"
+            colorScheme="green"
+            disabled={products.length === 0}
+          >
             BUY
           </Button>
-          <Button variant="outline" minW="100px" colorScheme="red">
+          <Button
+            variant="outline"
+            minW="100px"
+            colorScheme="red"
+            disabled={products.length === 0}
+          >
             FORGET
           </Button>
         </HStack>
@@ -52,13 +61,18 @@ const MiniFridge: React.FunctionComponent<IMiniFridgeProps> = (props) => {
           p="20px 40px 0 40px"
           spacing={4}
           w="100%"
+          minHeight="250px"
         >
-          {products.map(product => {
+          {/* {products.map((product) => {
             return (
-
-              <FridgeItem strIngredient={product.strIngredient}/>
-            )
-          })}
+              <FridgeItem
+                strIngredient={product.strIngredient}
+                key={product.idIngredient}
+                idIngredient={product.idIngredient}
+              />
+            );
+          })} */}
+          {children}
         </VStack>
       </Center>
     </Center>

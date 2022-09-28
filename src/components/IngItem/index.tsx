@@ -1,11 +1,17 @@
 import * as React from "react";
 import { Flex, HStack, Heading, Image, Button, Icon } from "@chakra-ui/react";
-import { AiOutlineStar } from "react-icons/ai";
+import { AiOutlineStar, AiFillStar } from "react-icons/ai";
+import { Ingredient } from "types";
+// REDUX
+import { useAppDispatch } from "store/hooks";
+import { addFav } from "store/features/products";
+import { useAppSelector } from "store/hooks";
 
 interface IIngItemProps {
   strIngredient: string;
   idIngredient: string;
-  addItem: (id: string) => void;
+  addItem: () => void;
+  ingredient: Ingredient;
 }
 
 const IngItem: React.FunctionComponent<IIngItemProps> = ({
@@ -13,6 +19,9 @@ const IngItem: React.FunctionComponent<IIngItemProps> = ({
   idIngredient,
   addItem,
 }) => {
+  const dispatch = useAppDispatch();
+  const favs = useAppSelector((state) => state.products.favs);
+
   return (
     <Flex
       w="100%"
@@ -33,13 +42,18 @@ const IngItem: React.FunctionComponent<IIngItemProps> = ({
         </Heading>
       </HStack>
       <HStack alignItems="center">
-        <Icon as={AiOutlineStar} boxSize={6} color="yellow.300" />
+        <Icon
+          as={favs[idIngredient] ? AiFillStar : AiOutlineStar}
+          boxSize={6}
+          color="yellow.300"
+          onClick={() => dispatch(addFav(idIngredient))}
+        />
         <Button
           colorScheme="whatsapp"
           variant="outline"
           size="xs"
           id={idIngredient}
-          onClick={() => addItem(idIngredient)}
+          onClick={addItem}
         >
           ADD
         </Button>
