@@ -7,8 +7,10 @@ import {
   HStack,
   VStack,
   Button,
+  Flex,
 } from "@chakra-ui/react";
-import { RiFridgeFill, RiArrowUpSFill } from "react-icons/ri";
+import { RiFridgeFill, RiArrowUpSFill, RiTempColdLine } from "react-icons/ri";
+// REDUX
 import { useAppSelector } from "store/hooks";
 
 interface IMiniFridgeProps {
@@ -20,24 +22,26 @@ const MiniFridge: React.FunctionComponent<IMiniFridgeProps> = ({
 }) => {
   const products = useAppSelector((state) => state.products.selectedProducts);
   return (
-    <Center flexDirection="column" pos="relative" w="100%">
-      <Icon as={RiFridgeFill} boxSize={8} color="blackAlpha.700" mb="12px" />
-      <Icon
-        as={RiArrowUpSFill}
-        boxSize={8}
-        color="blackAlpha.700"
-        pos="absolute"
-        top="26px"
-      />
-      <Center
+    <Center flexDirection="column" w="100%">
+      <Flex
         border="1px solid #ccc"
         p="20px 0"
         w="90%"
+        minHeight="65%"
         borderRadius="5px"
         flexDirection="column"
         boxShadow="2px 3px 3px rgba(100, 100, 100, .5)"
+        pos="relative"
       >
-        <HStack marginBottom="20px">
+        <Flex pos="absolute" top="-51px" align="center" width="100%" flexDirection="column">
+          <Icon as={RiFridgeFill} boxSize={8} color="blackAlpha.700" mb="12px" />
+          <Icon
+            as={RiArrowUpSFill}
+            boxSize={8}
+            color="blackAlpha.400"
+          />
+        </Flex>
+        <HStack marginBottom="20px" justifyContent="center">
           <Button
             variant="outline"
             minW="100px"
@@ -61,7 +65,7 @@ const MiniFridge: React.FunctionComponent<IMiniFridgeProps> = ({
           p="20px 40px 0 40px"
           spacing={4}
           w="100%"
-          minHeight="250px"
+          // minHeight="50%"
         >
           {/* {products.map((product) => {
             return (
@@ -72,9 +76,11 @@ const MiniFridge: React.FunctionComponent<IMiniFridgeProps> = ({
               />
             );
           })} */}
+          {/* <Icon as={RiTempColdLine} boxSize={8} color="blackAlpha.700" mb="12px" /> */}
+
           {children}
         </VStack>
-      </Center>
+      </Flex>
     </Center>
   );
 };

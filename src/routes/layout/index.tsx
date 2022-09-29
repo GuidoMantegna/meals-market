@@ -14,7 +14,7 @@ const Layout: React.FunctionComponent<LayoutProps> = (props) => {
         p={{ base: "0", sm: "0 5%", md: "0 15%" }}
         // bg="gray.100"
         direction="column"
-        minHeight="100vh"
+        h="100vh"
         w="100%"
         borderRadius={4}
       >
@@ -24,7 +24,7 @@ const Layout: React.FunctionComponent<LayoutProps> = (props) => {
         <Flex>
           <Navbar />
         </Flex>
-        <Flex align="center" justify="center" p={2} grow={1} overflow='hidden'>
+        <Flex /*align="center"*/ justify="center" p={2} grow={1} overflow='hidden'>
           {/* {isLargerThan1280 && (
             <Flex grow={1} justify="center">
               <MiniFridge />

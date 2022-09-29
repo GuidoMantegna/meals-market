@@ -75,8 +75,8 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
   if (loadingIngredients) return <LoadingModal />;
 
   return (
-    <Flex align="center" justify="center" p={2} grow={1} overflow="hidden">
-      <Flex grow={1}>
+    <Flex /*align="center"*/ justify="center" p={2} grow={1} overflow="hidden">
+      <Flex w="40%">
         <MiniFridge>
           {items.map((product) => {
             return (
@@ -90,7 +90,7 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
           })}
         </MiniFridge>
       </Flex>
-      <Flex grow={2}>
+      <Flex w="60%" mt="25px">
         <VStack w="95%">
           <InputGroup size="md">
             <Input
@@ -111,7 +111,7 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
               </Button>
             </InputRightElement>
           </InputGroup>
-          <FormControl display="flex" alignItems="center" justifyContent="center">
+          <FormControl display="flex" alignItems="center" justifyContent="center" m="15px">
             <FormLabel htmlFor="email-alerts" mb="0">
               Only Favs
             </FormLabel>
@@ -121,7 +121,7 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
             w="100%"
             p="5px"
             overflowY="scroll"
-            maxHeight="500px"
+            // maxHeight="500px"
             css={{
               "&::-webkit-scrollbar": {
                 width: "6px",

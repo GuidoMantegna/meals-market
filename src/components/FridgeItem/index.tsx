@@ -27,7 +27,9 @@ const FridgeItem: React.FunctionComponent<IFridgeItemProps> = ({
       <HStack>
         <Icon as={GiIceCube} boxSize={8} />
         <Text fontSize="sm" fontWeight="bold">
-          {strIngredient}
+          <>
+          {strIngredient} 
+          </>
         </Text>
         <Text fontSize="sm">x {qty}</Text>
       </HStack>

@@ -1,5 +1,3 @@
-import { NullLiteral } from "typescript";
-
 export type Category = {
   idCategory: string;
   strCategory: string;
