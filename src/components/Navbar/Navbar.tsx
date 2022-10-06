@@ -11,8 +11,11 @@ import {
   useColorMode,
 } from "@chakra-ui/react";
 import { FiMenu } from "react-icons/fi";
-import { RiMapPinUserFill } from "react-icons/ri";
+import { RiMapPinUserFill, RiFridgeFill } from "react-icons/ri";
 import { ColorModeSwitcher } from "../index";
+// REDUX
+import { useAppDispatch, useAppSelector } from "store/hooks";
+import { toggleFridge } from "store/features/toggle";
 
 interface NavbarProps {}
 
@@ -20,6 +23,7 @@ const Navbar: React.FunctionComponent<NavbarProps> = (props) => {
   const [isLarge] = useMediaQuery("(min-width: 540px)");
   const location = useLocation();
   const { colorMode } = useColorMode()
+  const dispatch = useAppDispatch();
 
   return (
     <>
@@ -82,7 +86,10 @@ const Navbar: React.FunctionComponent<NavbarProps> = (props) => {
         ) : (
           <>
             <Icon as={FiMenu} boxSize={6} />
-            <Icon as={RiMapPinUserFill} boxSize={6} />
+            <HStack spacing={6}>
+              <Icon as={RiFridgeFill} boxSize={6} onClick={() => dispatch(toggleFridge())}/>
+              <Icon as={RiMapPinUserFill} boxSize={6} />
+            </HStack>
           </>
         )}
       </Flex>

@@ -16,6 +16,7 @@ import {
   FormLabel,
   FormControl,
   Switch,
+  Collapse,
 } from "@chakra-ui/react";
 // REDUX
 import { useAppDispatch, useAppSelector } from "store/hooks";
@@ -42,6 +43,7 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
 
   const dispatch = useAppDispatch();
   const favs = useAppSelector((state) => state.products.favs);
+  const isFridgeOpen = useAppSelector((state) => state.toggle.fridge);
 
   const searchedItem = useMemo(() => {
     if (onlyFavs) {
@@ -95,26 +97,33 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
   if (loadingIngredients) return <LoadingModal />;
 
   return (
-    <Flex /*align="center"*/ justify="center" p={2} grow={1} overflow="hidden">
-      <Flex w="40%">
+    <Flex pos="relative" justify="center" p={2} grow={1} overflow="hidden">
+      <Collapse in={isFridgeOpen} animateOpacity>
+      <Flex
+        w={{ base: "75%", lg: "40%" }}
+        pos={{ base: "absolute", lg: "initial" }}
+        zIndex={3}
+        right={0}
+        >
         <MiniFridge
           // totalPrice={0}
           totals={totals}
-        >
+          >
           {items.map((product) => {
             return (
               <FridgeItem
-                strIngredient={product.strIngredient}
-                key={product.idIngredient}
-                idIngredient={product.idIngredient}
-                qty={product.qty}
-                removeItem={() => setItem(product, "remove")}
+              strIngredient={product.strIngredient}
+              key={product.idIngredient}
+              idIngredient={product.idIngredient}
+              qty={product.qty}
+              removeItem={() => setItem(product, "remove")}
               />
-            );
-          })}
+              );
+            })}
         </MiniFridge>
       </Flex>
-      <Flex w="60%" mt="25px">
+            </Collapse>
+      <Flex w={{base: "100%", lg:"60%"}} mt="25px">
         <VStack w="95%">
           <InputGroup size="md">
             <Input
@@ -152,7 +161,7 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
           </FormControl>
           <VStack
             w="100%"
-            p="5px"
+            p={{lg: "5px"}}
             overflowY="scroll"
             // maxHeight="500px"
             css={utils.customScrollBar}

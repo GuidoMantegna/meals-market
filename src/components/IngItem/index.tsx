@@ -38,17 +38,17 @@ const IngItem: React.FunctionComponent<IIngItemProps> = ({
           alt="Aubergine"
           src={`https://www.themealdb.com/images/ingredients/${strIngredient}-Small.png`}
         />
-        <Heading as="h5" size="sm">
+        <Heading as="h6" size={{base: "xs", lg:"sm"}} w={{base: "min-content", lg: "initial"}}>
           {strIngredient} 
         </Heading>
-        <Text>
+        <Text fontSize={{base: "xs", lg:"sm"}} whiteSpace="nowrap">
           $ {utils.stringToInt(strIngredient)}
         </Text>
       </HStack>
       <HStack alignItems="center">
         <Icon
           as={favs[idIngredient] ? AiFillStar : AiOutlineStar}
-          boxSize={6}
+          boxSize={{base: 4, lg: 6}}
           color="yellow.300"
           onClick={() => dispatch(addFav(idIngredient))}
         />
@@ -62,8 +62,8 @@ const IngItem: React.FunctionComponent<IIngItemProps> = ({
           ADD
         </Button> */}
         <ButtonGroup size='xs' isAttached variant='outline' colorScheme="whatsapp" onClick={addItem}>
-          <Button>ADD</Button>
-          <IconButton aria-label='Add to friends' icon={<Icon as={GoPlusSmall} />} />
+          <Button p={{base: "4px", lg: "8px"}}>ADD</Button>
+          <IconButton aria-label='Add to friends' icon={<Icon as={GoPlusSmall}/>} />
         </ButtonGroup>
       </HStack>
     </Flex>
