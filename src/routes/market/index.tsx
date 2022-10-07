@@ -30,10 +30,12 @@ import { addProduct } from "store/features/products";
 import { BsSearch } from "react-icons/bs";
 import { RiFridgeFill, RiArrowUpSFill } from "react-icons/ri";
 import { AiOutlineStar, AiFillStar } from "react-icons/ai";
+import { CgPlayTrackNext, CgPlayTrackPrev } from "react-icons/cg";
 
 import useIngredients from "customHooks/useIngredients";
 import { Ingredient } from "types";
 import { utils } from "utils";
+import { start } from "repl";
 
 interface IMarketProps {}
 interface totals {
@@ -48,6 +50,7 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
   const [items, setItems] = useState<Ingredient[]>([]);
   const [onlyFavs, setOnlyFavs] = useState(false);
   const [totals, setTotals] = useState({ qty: 0, price: 0 });
+  const [page, setPage] = useState({ start: 0, end: 9 });
   const [isFridgeOpen, toggle] = useState<boolean>(false);
 
   const dispatch = useAppDispatch();
@@ -58,15 +61,23 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
     if (onlyFavs) {
       return ingredients.filter((ing) => (favs[ing.idIngredient] ? ing : null));
     } else {
-      return ingredients.filter((ing) =>
-        ing.strIngredient.toLowerCase().includes(search.toLocaleLowerCase())
-      );
+      return ingredients
+        .filter((ing) =>
+          ing.strIngredient.toLowerCase().includes(search.toLocaleLowerCase())
+        )
+        .slice(page.start, page.end);
     }
-  }, [searching, ingredients, onlyFavs]);
+  }, [searching, ingredients, onlyFavs, page]);
 
   // const totals = useMemo(() => {
   //   return items.reduce((prev, curr) => prev.qty + curr.qty)
   // }, [items])
+
+  const turnPage = (direction: string) => {
+    if (direction === "next") {
+      setPage({ start: page.start + 10, end: page.end + 10 });
+    } else setPage({ start: page.start - 10, end: page.end - 10 });
+  };
 
   const setItem = (newIng: Ingredient, action: string) => {
     // dispatch(addProduct(ing));
@@ -108,35 +119,38 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
   return (
     <Flex pos="relative" justify="center" p={2} grow={1} overflow="hidden">
       {/* <Collapse in={isFridgeOpen} animateOpacity> */}
-        <Flex
-          w={{ base: "75%", lg: "40%" }}
-          pos={{ base: "absolute", lg: "initial" }}
-          zIndex={3}
-          left={0}
-          top="80px"
-          transform={{base: isFridgeOpen ? "initial" : "translateX(-100%)", lg: "initial"}}
-          transition=".5s all"
+      <Flex
+        w={{ base: "75%", lg: "40%" }}
+        pos={{ base: "absolute", lg: "initial" }}
+        zIndex={3}
+        left={0}
+        top="80px"
+        transform={{
+          base: isFridgeOpen ? "initial" : "translateX(-100%)",
+          lg: "initial",
+        }}
+        transition=".5s all"
+      >
+        <MiniFridge
+          // totalPrice={0}
+          totals={totals}
         >
-          <MiniFridge
-            // totalPrice={0}
-            totals={totals}
-          >
-            {items.map((product) => {
-              return (
-                <>
-                  <FridgeItem
-                    strIngredient={product.strIngredient}
-                    key={product.idIngredient}
-                    idIngredient={product.idIngredient}
-                    qty={product.qty}
-                    removeItem={() => setItem(product, "remove")}
-                  />
-                  <Divider />
-                </>
-              );
-            })}
-          </MiniFridge>
-        </Flex>
+          {items.map((product) => {
+            return (
+              <>
+                <FridgeItem
+                  strIngredient={product.strIngredient}
+                  key={product.idIngredient}
+                  idIngredient={product.idIngredient}
+                  qty={product.qty}
+                  removeItem={() => setItem(product, "remove")}
+                />
+                <Divider />
+              </>
+            );
+          })}
+        </MiniFridge>
+      </Flex>
       {/* </Collapse> */}
       <Flex w={{ base: "100%", lg: "60%" }} mt="25px">
         <VStack w="95%" spacing={5}>
@@ -162,13 +176,13 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
               >
                 {totals.qty}
               </Center>
-            <Text
-              textAlign="center"
-              // fontWeight="bold"
-              fontSize={{ base: "xs", lg: "sm" }}
-            >
-              Total: $ {totals.price.toFixed(2)}
-            </Text>
+              <Text
+                textAlign="center"
+                // fontWeight="bold"
+                fontSize={{ base: "xs", lg: "sm" }}
+              >
+                Total: $ {totals.price.toFixed(2)}
+              </Text>
             </HStack>
 
             <Box>
@@ -222,12 +236,12 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
                 <Icon
                   as={onlyFavs ? AiFillStar : AiOutlineStar}
                   // as={AiOutlineStar}
-                  boxSize={{base: 4, lg: 6}}
+                  boxSize={{ base: 4, lg: 6 }}
                   // color="yellow.300"
-              // onChange={() => setOnlyFavs(!onlyFavs)}
+                  // onChange={() => setOnlyFavs(!onlyFavs)}
 
                   // onClick={() => dispatch(addFav(idIngredient))}
-        />
+                />
               </Button>
             </InputRightElement>
           </InputGroup>
@@ -271,6 +285,25 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
               );
             })}
           </VStack>
+          <HStack spacing={6}>
+            <Button size="xs" variant="outline" onClick={() => turnPage("prev")}>
+              <Icon
+                as={CgPlayTrackPrev}
+                boxSize={{ base: 4, lg: 6 }}
+              />
+              <Text fontSize="xs">Prev</Text>
+            </Button>
+            <Text>
+              {page.start + 1} to {page.end + 1}
+            </Text>
+            <Button size="xs" variant="outline" onClick={() => turnPage("next")}>
+              <Text fontSize="xs">Next</Text>
+              <Icon
+                as={CgPlayTrackNext}
+                boxSize={{ base: 4, lg: 6 }}
+              />
+            </Button>
+          </HStack>
         </VStack>
       </Flex>
     </Flex>
