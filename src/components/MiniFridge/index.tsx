@@ -36,20 +36,19 @@ const MiniFridge: React.FunctionComponent<IMiniFridgeProps> = ({
   const products = useAppSelector((state) => state.products.selectedProducts);
   const [isLargerThan1280] = useMediaQuery("(min-width: 1100px)");
   return (
-    <Center flexDirection="column" w="100%" mt={{lg: "90px"}}>
+    <Center flexDirection="column" w="100%">
       <Flex
         border="1px solid #ccc"
         p="20px 0"
         w="90%"
-        h="100%"
-        borderRadius="5px"
+        // h="100%"
+        borderRadius="15px"
         flexDirection="column"
         boxShadow="2px 3px 3px rgba(100, 100, 100, .5)"
         pos="relative"
         bgColor="white"
       >
-        {/* {isLargerThan1280 && */}
-          <Flex
+          {/* <Flex
             pos="absolute"
             top="-63px"
             align={{base: "end", lg:"center"}}
@@ -73,9 +72,8 @@ const MiniFridge: React.FunctionComponent<IMiniFridgeProps> = ({
               {totals.qty}
             </Center>
             <Icon as={RiArrowUpSFill} boxSize={8} color="blackAlpha.400" />
-          </Flex>
-        {/* } */}
-        <Collapse in={totals.qty !== 0} animateOpacity>
+          </Flex> */}
+        {/* <Collapse in={totals.qty !== 0} animateOpacity>
           <Box>
             <HStack marginBottom="15px" justifyContent="center">
               <Button
@@ -102,23 +100,30 @@ const MiniFridge: React.FunctionComponent<IMiniFridgeProps> = ({
             </Text>
             <Divider />
           </Box>
-        </Collapse>
+        </Collapse> */}
         <VStack
           flexDirection="column"
           p="20px 40px 0 40px"
           spacing={4}
           w="100%"
+          h="50vh"
           overflowX="scroll"
           css={utils.customScrollBar}
         >
           {totals.qty === 0 && (
-            <Icon
-              as={FaTemperatureLow}
-              boxSize={8}
-              color="blackAlpha.700"
-              mb="12px"
-              alignSelf="end"
-            />
+            <>
+              <Flex w="100%" justifyContent="space-around">
+                <Text>Your fridge is empty</Text>
+              <Icon
+                as={FaTemperatureLow}
+                boxSize={8}
+                color="blackAlpha.700"
+                mb="12px"
+                alignSelf="end"
+              />
+              </Flex>
+              <Divider/>
+            </>
           )}
           {children}
         </VStack>

@@ -17,12 +17,20 @@ import {
   FormControl,
   Switch,
   Collapse,
+  Text,
+  HStack,
+  Center,
+  Box,
+  Divider,
 } from "@chakra-ui/react";
 // REDUX
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import { addProduct } from "store/features/products";
 
 import { BsSearch } from "react-icons/bs";
+import { RiFridgeFill, RiArrowUpSFill } from "react-icons/ri";
+import { AiOutlineStar, AiFillStar } from "react-icons/ai";
+
 import useIngredients from "customHooks/useIngredients";
 import { Ingredient } from "types";
 import { utils } from "utils";
@@ -40,10 +48,11 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
   const [items, setItems] = useState<Ingredient[]>([]);
   const [onlyFavs, setOnlyFavs] = useState(false);
   const [totals, setTotals] = useState({ qty: 0, price: 0 });
+  const [isFridgeOpen, toggle] = useState<boolean>(false);
 
   const dispatch = useAppDispatch();
   const favs = useAppSelector((state) => state.products.favs);
-  const isFridgeOpen = useAppSelector((state) => state.toggle.fridge);
+  // const isFridgeOpen = useAppSelector((state) => state.toggle.fridge);
 
   const searchedItem = useMemo(() => {
     if (onlyFavs) {
@@ -98,33 +107,92 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
 
   return (
     <Flex pos="relative" justify="center" p={2} grow={1} overflow="hidden">
-      <Collapse in={isFridgeOpen} animateOpacity>
-      <Flex
-        w={{ base: "75%", lg: "40%" }}
-        pos={{ base: "absolute", lg: "initial" }}
-        zIndex={3}
-        right={0}
+      {/* <Collapse in={isFridgeOpen} animateOpacity> */}
+        <Flex
+          w={{ base: "75%", lg: "40%" }}
+          pos={{ base: "absolute", lg: "initial" }}
+          zIndex={3}
+          left={0}
+          top="80px"
+          transform={{base: isFridgeOpen ? "initial" : "translateX(-100%)", lg: "initial"}}
+          transition=".5s all"
         >
-        <MiniFridge
-          // totalPrice={0}
-          totals={totals}
+          <MiniFridge
+            // totalPrice={0}
+            totals={totals}
           >
-          {items.map((product) => {
-            return (
-              <FridgeItem
-              strIngredient={product.strIngredient}
-              key={product.idIngredient}
-              idIngredient={product.idIngredient}
-              qty={product.qty}
-              removeItem={() => setItem(product, "remove")}
-              />
+            {items.map((product) => {
+              return (
+                <>
+                  <FridgeItem
+                    strIngredient={product.strIngredient}
+                    key={product.idIngredient}
+                    idIngredient={product.idIngredient}
+                    qty={product.qty}
+                    removeItem={() => setItem(product, "remove")}
+                  />
+                  <Divider />
+                </>
               );
             })}
-        </MiniFridge>
-      </Flex>
-            </Collapse>
-      <Flex w={{base: "100%", lg:"60%"}} mt="25px">
-        <VStack w="95%">
+          </MiniFridge>
+        </Flex>
+      {/* </Collapse> */}
+      <Flex w={{ base: "100%", lg: "60%" }} mt="25px">
+        <VStack w="95%" spacing={5}>
+          <HStack /*marginBottom="15px"*/ justify="space-around" w="100%">
+            <HStack pos="relative" spacing={5}>
+              <Icon
+                as={RiFridgeFill}
+                boxSize={{ base: 6, lg: 8 }}
+                color="gray.600"
+                onClick={() => toggle(!isFridgeOpen)}
+              />
+              <Center
+                borderRadius="50%"
+                border="1px solid"
+                backgroundColor="gray.600"
+                color="white"
+                fontSize="0.65em"
+                h="25px"
+                w="25px"
+                pos="absolute"
+                left="-7px"
+                bottom="17px"
+              >
+                {totals.qty}
+              </Center>
+            <Text
+              textAlign="center"
+              // fontWeight="bold"
+              fontSize={{ base: "xs", lg: "sm" }}
+            >
+              Total: $ {totals.price.toFixed(2)}
+            </Text>
+            </HStack>
+
+            <Box>
+              <Button
+                variant="outline"
+                w={{ base: "75px", lg: "100px" }}
+                colorScheme="green"
+                disabled={totals.qty === 0}
+                size={{ base: "xs", lg: "sm" }}
+              >
+                BUY
+              </Button>
+              <Button
+                variant="outline"
+                w={{ base: "75px", lg: "100px" }}
+                marginLeft={2}
+                colorScheme="red"
+                disabled={totals.qty === 0}
+                size={{ base: "xs", lg: "sm" }}
+              >
+                FORGET
+              </Button>
+            </Box>
+          </HStack>
           <InputGroup size="md">
             <Input
               value={search}
@@ -132,19 +200,38 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
               onChange={(e) => setSearch(e.target.value)}
               type="text"
             />
-            <InputRightElement>
+            <InputRightElement right="12px">
               <Button
                 h="100%"
                 size="sm"
                 onClick={() => setSearching(search)}
                 variant="outline"
-                borderRadius="0 5px 5px 0"
+                borderRadius="0"
               >
                 <Icon as={BsSearch} />
               </Button>
+              <Button
+                h="100%"
+                w="100%"
+                size="sm"
+                onClick={() => setOnlyFavs(!onlyFavs)}
+                variant="outline"
+                borderRadius="0 5px 5px 0"
+              >
+                {/* <Icon as={BsSearch} /> */}
+                <Icon
+                  as={onlyFavs ? AiFillStar : AiOutlineStar}
+                  // as={AiOutlineStar}
+                  boxSize={{base: 4, lg: 6}}
+                  // color="yellow.300"
+              // onChange={() => setOnlyFavs(!onlyFavs)}
+
+                  // onClick={() => dispatch(addFav(idIngredient))}
+        />
+              </Button>
             </InputRightElement>
           </InputGroup>
-          <FormControl
+          {/* <FormControl
             display="flex"
             alignItems="center"
             justifyContent="center"
@@ -158,10 +245,10 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
               onChange={() => setOnlyFavs(!onlyFavs)}
               colorScheme="teal"
             />
-          </FormControl>
+          </FormControl> */}
           <VStack
             w="100%"
-            p={{lg: "5px"}}
+            p={{ lg: "5px" }}
             overflowY="scroll"
             // maxHeight="500px"
             css={utils.customScrollBar}
