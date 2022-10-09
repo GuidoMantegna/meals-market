@@ -11,24 +11,22 @@ import {
   useColorMode,
 } from "@chakra-ui/react";
 import { FiMenu } from "react-icons/fi";
-import { RiMapPinUserFill, RiFridgeFill } from "react-icons/ri";
+import { RiMapPinUserFill } from "react-icons/ri";
 import { ColorModeSwitcher } from "../index";
 // REDUX
-import { useAppDispatch, useAppSelector } from "store/hooks";
-import { toggleFridge } from "store/features/toggle";
+import { useAppDispatch } from "store/hooks";
 
 interface NavbarProps {}
 
 const Navbar: React.FunctionComponent<NavbarProps> = (props) => {
   const [isLarge] = useMediaQuery("(min-width: 540px)");
   const location = useLocation();
-  const { colorMode } = useColorMode()
+  const { colorMode } = useColorMode();
   const dispatch = useAppDispatch();
 
   return (
     <>
       <Flex
-        // bg="gray.800"
         bgColor={colorMode === "light" ? "gray.800" : "blackAlpha.900"}
         color="gray.300"
         w="100%"
@@ -36,8 +34,6 @@ const Navbar: React.FunctionComponent<NavbarProps> = (props) => {
         align="center"
         justify={"space-between"}
       >
-        {/* <NavMenu /> */}
-
         {isLarge ? (
           <>
             <HStack
@@ -48,14 +44,18 @@ const Navbar: React.FunctionComponent<NavbarProps> = (props) => {
               <Link
                 as={RouterLink}
                 to="/market"
-                fontWeight={location.pathname === "/market" ? "semibold" : "light"}
+                fontWeight={
+                  location.pathname === "/market" ? "semibold" : "light"
+                }
               >
                 Market
               </Link>
               <Link
                 as={RouterLink}
                 to="/meals"
-                fontWeight={location.pathname === "/meals" ? "semibold" : "light"}
+                fontWeight={
+                  location.pathname === "/meals" ? "semibold" : "light"
+                }
               >
                 Meals
               </Link>
@@ -86,10 +86,7 @@ const Navbar: React.FunctionComponent<NavbarProps> = (props) => {
         ) : (
           <>
             <Icon as={FiMenu} boxSize={6} />
-            <HStack spacing={6}>
-              <Icon as={RiFridgeFill} boxSize={6} onClick={() => dispatch(toggleFridge())}/>
-              <Icon as={RiMapPinUserFill} boxSize={6} />
-            </HStack>
+            <Icon as={RiMapPinUserFill} boxSize={6} />
           </>
         )}
       </Flex>

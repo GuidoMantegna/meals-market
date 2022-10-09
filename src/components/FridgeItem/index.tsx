@@ -9,20 +9,20 @@ interface IFridgeItemProps {
   strIngredient: string;
   idIngredient: string;
   qty: number;
-  removeItem: () => void;
+  removeItem2: () => void;
 }
 
 const FridgeItem: React.FunctionComponent<IFridgeItemProps> = ({
   strIngredient,
   idIngredient,
   qty,
-  removeItem,
+  removeItem2,
 }) => {
   const dispatch = useAppDispatch();
 
-  const handleDelete = () => {
-    dispatch(deleteProduct(idIngredient));
-  };
+  // const handleDelete = () => {
+  //   dispatch(deleteProduct(idIngredient));
+  // };
 
   return (
     <Flex width="100%" justifyContent="space-between" alignItems="center">
@@ -33,14 +33,13 @@ const FridgeItem: React.FunctionComponent<IFridgeItemProps> = ({
           {strIngredient} 
           </>
         </Text>
-        <Text fontSize={{base: "xs", lg:"sm"}}>x {qty}</Text>
+        <Text fontSize={{base: "xs", lg:"sm"}} whiteSpace="nowrap">x {qty}</Text>
       </HStack>
       <Button
         variant="ghost"
         colorScheme="red"
         size="xs"
-        // onClick={() => handleDelete()}
-        onClick={removeItem}
+        onClick={removeItem2}
       >
         <Icon as={ImCross} boxSize={{base: 3, lg:4}} />
       </Button>
