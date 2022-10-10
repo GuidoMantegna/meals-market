@@ -50,26 +50,29 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
   // const [totals, setTotals] = useState({ qty: 0, price: 0 });
   const [page, setPage] = useState({ start: 0, end: 10 });
   const [isFridgeOpen, toggle] = useState<boolean>(false);
-  const [isItemLoading, setLoadingItem] = useState<string>('');
+  const [isItemLoading, setLoadingItem] = useState<string>("");
 
   const dispatch = useAppDispatch();
   const favs = useAppSelector((state) => state.products.favs);
 
-  const searchedItem = useMemo(() => {     
-    let results = []
+  const searchedItem = useMemo(() => {
+    let results = [];
 
     if (onlyFavs) {
-      results = ingredients.filter((ing) => (favs[ing.idIngredient] ? ing : null));
+      results = ingredients.filter((ing) =>
+        favs[ing.idIngredient] ? ing : null
+      );
     } else {
-      results = ingredients
-        .filter((ing) =>
-          ing.strIngredient.toLowerCase().includes(search.toLocaleLowerCase())
-        )
-        // .slice(page.start, page.end);
+      results = ingredients.filter((ing) =>
+        ing.strIngredient.toLowerCase().includes(search.toLocaleLowerCase())
+      );
+      // .slice(page.start, page.end);
     }
 
-    return {results: results.slice(page.start, page.end), totalResults: results.length}
-
+    return {
+      results: results.slice(page.start, page.end),
+      totalResults: results.length,
+    };
   }, [searching, ingredients, onlyFavs, page]);
 
   const fridgeItems = useMemo(() => {
@@ -94,9 +97,20 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
   }, [items2]);
 
   const turnPage = (direction: string) => {
+    const { start, end } = page;
+    const { totalResults } = searchedItem;
+    const firstPage = start - 10 === 0;
+
     if (direction === "next") {
-      setPage({ start: page.start + 10, end: (page.end + 10) > searchedItem.totalResults ? searchedItem.totalResults : page.end + 10 });
-    } else setPage({ start: page.start - 10, end: (page.end % 10 === 0) ? page.end - 10 : page.end - page.end % 10});
+      setPage({
+        start: start + 10,
+        end: end + 10 > totalResults ? totalResults : end + 10,
+      });
+    } else
+      setPage({
+        start: start - 10,
+        end: !firstPage ? end - 10 : end - (end % 10),
+      });
   };
 
   // const setItem = (newIng: Ingredient, action: string) => {
@@ -138,7 +152,7 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
     strIngredient: string,
     action: string
   ) => {
-    setLoadingItem(idIngredient)
+    setLoadingItem(idIngredient);
     setItems2({
       ...items2,
       [idIngredient]: {
@@ -153,7 +167,7 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
           : utils.stringToInt(strIngredient),
       },
     });
-    setTimeout(() => setLoadingItem(''), 500)
+    setTimeout(() => setLoadingItem(""), 500);
   };
 
   if (loadingIngredients) return <LoadingModal />;
@@ -179,7 +193,12 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
           {fridgeItems.choosenItems.map((product) => {
             return (
               <>
-                <Skeleton key={product.idIngredient} isLoaded={!(product.idIngredient === isItemLoading)} w="100%" borderRadius={5}>
+                <Skeleton
+                  key={product.idIngredient}
+                  isLoaded={!(product.idIngredient === isItemLoading)}
+                  w="100%"
+                  borderRadius={5}
+                >
                   <FridgeItem
                     strIngredient={product.strIngredient}
                     // key={product.idIngredient}
@@ -264,8 +283,8 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
                 h="100%"
                 size="sm"
                 onClick={() => {
-                  setSearching(search) 
-                  setPage({start: 0, end: 10})
+                  setSearching(search);
+                  setPage({ start: 0, end: 10 });
                 }}
                 variant="outline"
                 borderRadius="0"
@@ -320,17 +339,26 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
               size="xs"
               variant="outline"
               onClick={() => turnPage("prev")}
+              disabled={page.start - 10 < -1}
             >
               <Icon as={CgPlayTrackPrev} boxSize={{ base: 4, lg: 6 }} />
               <Text fontSize="xs">Prev</Text>
             </Button>
             <Text>
-              {page.start + 1} to {page.end} ({searchedItem.totalResults})
+              {page.start + 1} to{" "}
+              {page.end > searchedItem.totalResults
+                ? searchedItem.totalResults
+                : page.end}{" "}
+              ({searchedItem.totalResults})
             </Text>
             <Button
               size="xs"
               variant="outline"
               onClick={() => turnPage("next")}
+              disabled={
+                searchedItem.totalResults < 10 ||
+                page.end === searchedItem.totalResults
+              }
             >
               <Text fontSize="xs">Next</Text>
               <Icon as={CgPlayTrackNext} boxSize={{ base: 4, lg: 6 }} />
