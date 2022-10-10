@@ -9,14 +9,14 @@ interface IFridgeItemProps {
   strIngredient: string;
   idIngredient: string;
   qty: number;
-  removeItem2: () => void;
+  removeItem: () => void;
 }
 
 const FridgeItem: React.FunctionComponent<IFridgeItemProps> = ({
   strIngredient,
   idIngredient,
   qty,
-  removeItem2,
+  removeItem,
 }) => {
   const dispatch = useAppDispatch();
 
@@ -39,7 +39,7 @@ const FridgeItem: React.FunctionComponent<IFridgeItemProps> = ({
         variant="ghost"
         colorScheme="red"
         size="xs"
-        onClick={removeItem2}
+        onClick={removeItem}
       >
         <Icon as={ImCross} boxSize={{base: 3, lg:4}} />
       </Button>

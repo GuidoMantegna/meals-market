@@ -1,11 +1,12 @@
 import * as React from "react";
 import "./styles.scss";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 // REDUX
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import { addProduct } from "store/features/products";
 // APP COMPONENTS
 import { IngItem, LoadingModal, MiniFridge, FridgeItem } from "components";
+import { MarketToolBar, PageSelector } from "./components";
 // CHAKRA
 import {
   Input,
@@ -18,13 +19,10 @@ import {
   Flex,
   Text,
   HStack,
-  Center,
-  Box,
   Divider,
 } from "@chakra-ui/react";
 // ICONS
 import { BsSearch } from "react-icons/bs";
-import { RiFridgeFill } from "react-icons/ri";
 import { AiOutlineStar, AiFillStar } from "react-icons/ai";
 import { CgPlayTrackNext, CgPlayTrackPrev } from "react-icons/cg";
 // UTILS
@@ -33,31 +31,24 @@ import { Ingredient } from "types";
 import { utils } from "utils";
 
 interface IMarketProps {}
-interface totals {
-  qty: number;
-  price: number;
-}
 
 const Market: React.FunctionComponent<IMarketProps> = (props) => {
-  const { loadingIngredients, ingError, ingredients } = useIngredients();
-  const [search, setSearch] = useState<string>("");
-  const [searching, setSearching] = useState<string>("");
-  // const [items, setItems] = useState<Ingredient[]>([]);
-  const [items2, setItems2] = useState<
-    Record<Ingredient["idIngredient"], { qty: number; price: number }>
-  >({});
-  const [onlyFavs, setOnlyFavs] = useState(false);
-  // const [totals, setTotals] = useState({ qty: 0, price: 0 });
-  const [page, setPage] = useState({ start: 0, end: 10 });
-  const [isFridgeOpen, toggle] = useState<boolean>(false);
-  const [isItemLoading, setLoadingItem] = useState<string>("");
-
   const dispatch = useAppDispatch();
   const favs = useAppSelector((state) => state.products.favs);
 
+  const { loadingIngredients, ingError, ingredients } = useIngredients(),
+    [search, setSearch] = useState<string>(""),
+    [searching, setSearching] = useState<string>(""),
+    [items, setItems] = useState<
+      Record<Ingredient["idIngredient"], { qty: number; price: number }>
+    >({}),
+    [onlyFavs, setOnlyFavs] = useState(false),
+    [page, setPage] = useState({ start: 0, end: 10 }),
+    [isFridgeOpen, toggle] = useState<boolean>(false),
+    [isItemLoading, setLoadingItem] = useState<string>("");
+
   const searchedItem = useMemo(() => {
     let results = [];
-
     if (onlyFavs) {
       results = ingredients.filter((ing) =>
         favs[ing.idIngredient] ? ing : null
@@ -66,7 +57,6 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
       results = ingredients.filter((ing) =>
         ing.strIngredient.toLowerCase().includes(search.toLocaleLowerCase())
       );
-      // .slice(page.start, page.end);
     }
 
     return {
@@ -78,74 +68,20 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
   const fridgeItems = useMemo(() => {
     const choosenItems = ingredients
       .filter((ing) =>
-        items2[ing.idIngredient] && items2[ing.idIngredient].qty > 0
-          ? ing
-          : null
+        items[ing.idIngredient] && items[ing.idIngredient].qty > 0 ? ing : null
       )
-      .map((ing) => ({ ...ing, qty: items2[ing.idIngredient].qty }));
-
-    const totalQTY = Object.entries(items2).reduce(
+      .map((ing) => ({ ...ing, qty: items[ing.idIngredient].qty }));
+    const totalQTY = Object.entries(items).reduce(
       (acc, curr) => acc + curr[1].qty,
       0
     );
-    const totalPrice = Object.entries(items2).reduce(
+    const totalPrice = Object.entries(items).reduce(
       (acc, curr) => acc + (curr[1].qty > 0 ? curr[1].price : 0),
       0
     );
 
     return { choosenItems, totalPrice, totalQTY };
-  }, [items2]);
-
-  const turnPage = (direction: string) => {
-    const { start, end } = page;
-    const { totalResults } = searchedItem;
-    const firstPage = start - 10 === 0;
-
-    if (direction === "next") {
-      setPage({
-        start: start + 10,
-        end: end + 10 > totalResults ? totalResults : end + 10,
-      });
-    } else
-      setPage({
-        start: start - 10,
-        end: !firstPage ? end - 10 : end - (end % 10),
-      });
-  };
-
-  // const setItem = (newIng: Ingredient, action: string) => {
-  //   const exists = items.some(
-  //     (ing) => ing.idIngredient === newIng.idIngredient
-  //   );
-  //   if (action === "add") {
-  //     setTotals({
-  //       qty: totals.qty + 1,
-  //       price: totals.price + utils.stringToInt(newIng.strIngredient),
-  //     });
-  //     if (exists) {
-  //       setItems(
-  //         items.map((item) => {
-  //           if (item.idIngredient === newIng.idIngredient) {
-  //             return { ...item, qty: item.qty + 1 };
-  //           } else {
-  //             return item;
-  //           }
-  //         })
-  //       );
-  //     } else {
-  //       setItems(items.concat({ ...newIng, qty: 1 }));
-  //     }
-  //   } else {
-  //     setItems(
-  //       items.filter((item) => item.idIngredient !== newIng.idIngredient)
-  //     );
-  //     setTotals({
-  //       qty: totals.qty - newIng.qty,
-  //       price:
-  //         totals.price - newIng.qty * utils.stringToInt(newIng.strIngredient),
-  //     });
-  //   }
-  // };
+  }, [items]);
 
   const addItem = (
     idIngredient: string,
@@ -153,17 +89,17 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
     action: string
   ) => {
     setLoadingItem(idIngredient);
-    setItems2({
-      ...items2,
+    setItems({
+      ...items,
       [idIngredient]: {
         qty:
-          items2[idIngredient] && action === "add"
-            ? items2[idIngredient].qty + 1
-            : items2[idIngredient] && action === "remove"
+          items[idIngredient] && action === "add"
+            ? items[idIngredient].qty + 1
+            : items[idIngredient] && action === "remove"
             ? 0
             : 1,
-        price: items2[idIngredient]
-          ? items2[idIngredient].price + utils.stringToInt(strIngredient)
+        price: items[idIngredient]
+          ? items[idIngredient].price + utils.stringToInt(strIngredient)
           : utils.stringToInt(strIngredient),
       },
     });
@@ -175,11 +111,13 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
   return (
     <Flex pos="relative" justify="center" p={2} grow={1} overflow="hidden">
       <Flex
-        w={{ base: "75%", lg: "40%" }}
-        pos={{ base: "absolute", lg: "initial" }}
+        w={{ base: "100%", lg: "40%" }}
+        h={{ base: "100%", lg: "initial" }}
+        pos={{ base: "fixed", lg: "initial" }}
         zIndex={3}
-        left={0}
-        top="80px"
+        bgColor={{ base: "blackAlpha.700", lg: "initial" }}
+        // left={0}
+        top={0}
         transform={{
           base: isFridgeOpen ? "initial" : "translateX(-100%)",
           lg: "initial",
@@ -188,8 +126,8 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
       >
         <MiniFridge
           totals={{ qty: fridgeItems.totalQTY, price: fridgeItems.totalPrice }}
+          closeFridge={() => toggle(false)}
         >
-          {/* {items.map((product) => { */}
           {fridgeItems.choosenItems.map((product) => {
             return (
               <>
@@ -201,11 +139,9 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
                 >
                   <FridgeItem
                     strIngredient={product.strIngredient}
-                    // key={product.idIngredient}
                     idIngredient={product.idIngredient}
                     qty={product.qty}
-                    // removeItem={() => setItem(product, "remove")}
-                    removeItem2={() =>
+                    removeItem={() =>
                       addItem(
                         product.idIngredient,
                         product.strIngredient,
@@ -222,59 +158,15 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
       </Flex>
       <Flex w={{ base: "100%", lg: "60%" }} mt="25px">
         <VStack w="95%" spacing={5}>
-          <HStack justify="space-around" w="100%">
-            <HStack pos="relative" spacing={5}>
-              <Icon
-                as={RiFridgeFill}
-                boxSize={{ base: 6, lg: 8 }}
-                color="gray.600"
-                onClick={() => toggle(!isFridgeOpen)}
-              />
-              <Center
-                borderRadius="50%"
-                border="1px solid"
-                backgroundColor="gray.600"
-                color="white"
-                fontSize="0.65em"
-                h="25px"
-                w="25px"
-                pos="absolute"
-                left="-7px"
-                bottom="17px"
-              >
-                {fridgeItems.totalQTY}
-              </Center>
-              <Text textAlign="center" fontSize={{ base: "xs", lg: "sm" }}>
-                Total: $ {fridgeItems.totalPrice.toFixed(2)}
-              </Text>
-            </HStack>
-
-            <Box>
-              <Button
-                variant="outline"
-                w={{ base: "75px", lg: "100px" }}
-                colorScheme="green"
-                disabled={fridgeItems.totalQTY === 0}
-                size={{ base: "xs", lg: "sm" }}
-              >
-                BUY
-              </Button>
-              <Button
-                variant="outline"
-                w={{ base: "75px", lg: "100px" }}
-                marginLeft={2}
-                colorScheme="red"
-                disabled={fridgeItems.totalQTY === 0}
-                size={{ base: "xs", lg: "sm" }}
-              >
-                FORGET
-              </Button>
-            </Box>
-          </HStack>
+          <MarketToolBar
+            totalPrice={fridgeItems.totalPrice}
+            totalQTY={fridgeItems.totalQTY}
+            openFridge={() => toggle(true)}
+          />
           <InputGroup size="md">
             <Input
               value={search}
-              placeholder="Enter password"
+              placeholder="Search"
               onChange={(e) => setSearch(e.target.value)}
               type="text"
             />
@@ -295,7 +187,10 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
                 h="100%"
                 w="100%"
                 size="sm"
-                onClick={() => setOnlyFavs(!onlyFavs)}
+                onClick={() => {
+                  setOnlyFavs(!onlyFavs)
+                  // !onlyFavs && setPage({...page, start: 0})
+                }}
                 variant="outline"
                 borderRadius="0 5px 5px 0"
               >
@@ -308,6 +203,7 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
           </InputGroup>
           <VStack
             w="100%"
+            flexGrow={1}
             p={{ lg: "5px" }}
             overflowY="scroll"
             css={utils.customScrollBar}
@@ -323,7 +219,6 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
                   <IngItem
                     strIngredient={ing.strIngredient}
                     idIngredient={ing.idIngredient}
-                    // addItem={() => setItem(ing, "add")}
                     addItem={() =>
                       addItem(ing.idIngredient, ing.strIngredient, "add")
                     }
@@ -334,11 +229,14 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
               );
             })}
           </VStack>
+          {/* <PageSelector setPage={() => setPage()}/> */}
           <HStack spacing={6}>
             <Button
               size="xs"
               variant="outline"
-              onClick={() => turnPage("prev")}
+              onClick={() =>
+                setPage(utils.turnPage("prev", page, searchedItem.totalResults))
+              }
               disabled={page.start - 10 < -1}
             >
               <Icon as={CgPlayTrackPrev} boxSize={{ base: 4, lg: 6 }} />
@@ -354,7 +252,9 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
             <Button
               size="xs"
               variant="outline"
-              onClick={() => turnPage("next")}
+              onClick={() =>
+                setPage(utils.turnPage("next", page, searchedItem.totalResults))
+              }
               disabled={
                 searchedItem.totalResults < 10 ||
                 page.end === searchedItem.totalResults

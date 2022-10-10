@@ -62,12 +62,16 @@ const IngItem: React.FunctionComponent<IIngItemProps> = ({
         </Text>
       </HStack>
       <HStack alignItems="center">
-        <Icon
-          as={favs[idIngredient] ? AiFillStar : AiOutlineStar}
-          boxSize={{ base: 4, lg: 6 }}
-          color="yellow.300"
+        <Button
           onClick={() => dispatch(addFav(idIngredient))}
-        />
+          colorScheme="yellow"
+          variant="ghost"
+        >
+          <Icon
+            as={favs[idIngredient] ? AiFillStar : AiOutlineStar}
+            boxSize={{ base: 4, lg: 6 }}
+          />
+        </Button>
         <ButtonGroup
           size="xs"
           isAttached

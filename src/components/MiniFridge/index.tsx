@@ -6,6 +6,7 @@ import {
   VStack,
   Flex,
   Text,
+  CloseButton,
   useMediaQuery,
 } from "@chakra-ui/react";
 import { FaTemperatureLow } from "react-icons/fa";
@@ -16,11 +17,17 @@ import { utils } from "utils";
 interface IMiniFridgeProps {
   children: React.ReactNode;
   totals: { qty: number; price: number };
+  // toggle: (isFridgeOpen: boolean) => void;
+  // isFridgeOpen: boolean;
+  closeFridge: () => void
 }
 
 const MiniFridge: React.FunctionComponent<IMiniFridgeProps> = ({
   children,
   totals,
+  // toggle,
+  // isFridgeOpen,
+  closeFridge,
 }) => {
   const products = useAppSelector((state) => state.products.selectedProducts);
   const [isLargerThan1280] = useMediaQuery("(min-width: 1100px)");
@@ -29,13 +36,16 @@ const MiniFridge: React.FunctionComponent<IMiniFridgeProps> = ({
       <Flex
         border="1px solid #ccc"
         p="20px 0"
-        w="90%"
+        w={{base: "90%", sm: "50%", lg: "90%"}}
         borderRadius="15px"
         flexDirection="column"
         boxShadow="2px 3px 3px rgba(100, 100, 100, .5)"
         pos="relative"
         bgColor="white"
       >
+        {!isLargerThan1280 && <Flex justify="flex-end" pr="15px">
+          <CloseButton onClick={closeFridge}/>
+        </Flex>}
         <VStack
           flexDirection="column"
           p="20px 40px 0 40px"
