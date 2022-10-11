@@ -8,12 +8,16 @@ interface IMarketToolBarProps {
   totalQTY: number;
   totalPrice: number;
   openFridge: () => void;
+  forgetItems: () => void;
+  openModal: () => void;
 }
 
 const MarketToolBar: React.FunctionComponent<IMarketToolBarProps> = ({
   totalPrice,
   totalQTY,
   openFridge,
+  forgetItems,
+  openModal,
 }) => {
   return (
     <>
@@ -51,6 +55,7 @@ const MarketToolBar: React.FunctionComponent<IMarketToolBarProps> = ({
             colorScheme="green"
             disabled={totalQTY === 0}
             size={{ base: "xs", lg: "sm" }}
+            onClick={openModal}
           >
             BUY
           </Button>
@@ -61,6 +66,7 @@ const MarketToolBar: React.FunctionComponent<IMarketToolBarProps> = ({
             colorScheme="red"
             disabled={totalQTY === 0}
             size={{ base: "xs", lg: "sm" }}
+            onClick={forgetItems}
           >
             FORGET
           </Button>

@@ -20,6 +20,15 @@ import {
   Text,
   HStack,
   Divider,
+  Modal, 
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalOverlay,
+  ModalHeader,
+  ModalFooter,
+  useDisclosure,
+
 } from "@chakra-ui/react";
 // ICONS
 import { BsSearch } from "react-icons/bs";
@@ -35,6 +44,7 @@ interface IMarketProps {}
 const Market: React.FunctionComponent<IMarketProps> = (props) => {
   const dispatch = useAppDispatch();
   const favs = useAppSelector((state) => state.products.favs);
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   const { loadingIngredients, ingError, ingredients } = useIngredients(),
     [search, setSearch] = useState<string>(""),
@@ -109,6 +119,26 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
   if (loadingIngredients) return <LoadingModal />;
 
   return (
+    <>
+    <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent alignItems='center' w={{base: "85%", lg: "100%"}}>
+          <ModalHeader>Confirm buy</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Text textAlign='center'>
+              Are you sure you want to buy these {fridgeItems.totalQTY} for ${fridgeItems.totalPrice}?
+            </Text>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button size='sm' variant='outline' colorScheme='red' mr={3} onClick={onClose}>
+              Cancel
+            </Button>
+            <Button size='sm' variant='outline' colorScheme='green'>Accept</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     <Flex pos="relative" justify="center" p={2} grow={1} overflow="hidden">
       <Flex
         w={{ base: "100%", lg: "40%" }}
@@ -116,7 +146,6 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
         pos={{ base: "fixed", lg: "initial" }}
         zIndex={3}
         bgColor={{ base: "blackAlpha.700", lg: "initial" }}
-        // left={0}
         top={0}
         transform={{
           base: isFridgeOpen ? "initial" : "translateX(-100%)",
@@ -162,6 +191,8 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
             totalPrice={fridgeItems.totalPrice}
             totalQTY={fridgeItems.totalQTY}
             openFridge={() => toggle(true)}
+            forgetItems={() => setItems({})}
+            openModal={() => onOpen()}
           />
           <InputGroup size="md">
             <Input
@@ -267,6 +298,7 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
         </VStack>
       </Flex>
     </Flex>
+    </>
   );
 };
 
