@@ -20,7 +20,7 @@ import {
   Text,
   HStack,
   Divider,
-  Modal, 
+  Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -28,7 +28,6 @@ import {
   ModalHeader,
   ModalFooter,
   useDisclosure,
-
 } from "@chakra-ui/react";
 // ICONS
 import { BsSearch } from "react-icons/bs";
@@ -38,13 +37,14 @@ import { CgPlayTrackNext, CgPlayTrackPrev } from "react-icons/cg";
 import useIngredients from "customHooks/useIngredients";
 import { Ingredient } from "types";
 import { utils } from "utils";
+import { NavLink } from "react-router-dom";
 
 interface IMarketProps {}
 
 const Market: React.FunctionComponent<IMarketProps> = (props) => {
   const dispatch = useAppDispatch();
   const favs = useAppSelector((state) => state.products.favs);
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { loadingIngredients, ingError, ingredients } = useIngredients(),
     [search, setSearch] = useState<string>(""),
@@ -120,184 +120,211 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
 
   return (
     <>
-    <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent alignItems='center' w={{base: "85%", lg: "100%"}}>
+        <ModalContent alignItems="center" w={{ base: "85%", lg: "100%" }}>
           <ModalHeader>Confirm buy</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Text textAlign='center'>
-              Are you sure you want to buy these {fridgeItems.totalQTY} for ${fridgeItems.totalPrice}?
+            <Text textAlign="center">
+              Are you sure you want to buy these {fridgeItems.totalQTY} for $
+              {fridgeItems.totalPrice}?
             </Text>
           </ModalBody>
 
           <ModalFooter>
-            <Button size='sm' variant='outline' colorScheme='red' mr={3} onClick={onClose}>
+            <Button
+              size="sm"
+              variant="outline"
+              colorScheme="red"
+              mr={3}
+              onClick={onClose}
+            >
               Cancel
             </Button>
-            <Button size='sm' variant='outline' colorScheme='green'>Accept</Button>
+            <NavLink to="/fridge">
+              <Button
+                size="sm"
+                variant="outline"
+                colorScheme="green"
+                onClick={() => {
+                  dispatch(addProduct(Object.entries(items)));
+                  setItems({});
+                  onClose();
+                }}
+              >
+                Accept
+              </Button>
+            </NavLink>
           </ModalFooter>
         </ModalContent>
       </Modal>
-    <Flex pos="relative" justify="center" p={2} grow={1} overflow="hidden">
-      <Flex
-        w={{ base: "100%", lg: "40%" }}
-        h={{ base: "100%", lg: "initial" }}
-        pos={{ base: "fixed", lg: "initial" }}
-        zIndex={3}
-        bgColor={{ base: "blackAlpha.700", lg: "initial" }}
-        top={0}
-        transform={{
-          base: isFridgeOpen ? "initial" : "translateX(-100%)",
-          lg: "initial",
-        }}
-        transition=".5s all"
-      >
-        <MiniFridge
-          totals={{ qty: fridgeItems.totalQTY, price: fridgeItems.totalPrice }}
-          closeFridge={() => toggle(false)}
+      <Flex pos="relative" justify="center" p={2} grow={1} overflow="hidden">
+        <Flex
+          w={{ base: "100%", lg: "40%" }}
+          h={{ base: "100%", lg: "initial" }}
+          pos={{ base: "fixed", lg: "initial" }}
+          zIndex={3}
+          bgColor={{ base: "blackAlpha.700", lg: "initial" }}
+          top={0}
+          transform={{
+            base: isFridgeOpen ? "initial" : "translateX(-100%)",
+            lg: "initial",
+          }}
+          transition=".5s all"
         >
-          {fridgeItems.choosenItems.map((product) => {
-            return (
-              <>
-                <Skeleton
-                  key={product.idIngredient}
-                  isLoaded={!(product.idIngredient === isItemLoading)}
-                  w="100%"
-                  borderRadius={5}
-                >
-                  <FridgeItem
-                    strIngredient={product.strIngredient}
-                    idIngredient={product.idIngredient}
-                    qty={product.qty}
-                    removeItem={() =>
-                      addItem(
-                        product.idIngredient,
-                        product.strIngredient,
-                        "remove"
-                      )
-                    }
-                  />
-                  <Divider mt={2} />
-                </Skeleton>
-              </>
-            );
-          })}
-        </MiniFridge>
-      </Flex>
-      <Flex w={{ base: "100%", lg: "60%" }} mt="25px">
-        <VStack w="95%" spacing={5}>
-          <MarketToolBar
-            totalPrice={fridgeItems.totalPrice}
-            totalQTY={fridgeItems.totalQTY}
-            openFridge={() => toggle(true)}
-            forgetItems={() => setItems({})}
-            openModal={() => onOpen()}
-          />
-          <InputGroup size="md">
-            <Input
-              value={search}
-              placeholder="Search"
-              onChange={(e) => setSearch(e.target.value)}
-              type="text"
-            />
-            <InputRightElement right="12px">
-              <Button
-                h="100%"
-                size="sm"
-                onClick={() => {
-                  setSearching(search);
-                  setPage({ start: 0, end: 10 });
-                }}
-                variant="outline"
-                borderRadius="0"
-              >
-                <Icon as={BsSearch} />
-              </Button>
-              <Button
-                h="100%"
-                w="100%"
-                size="sm"
-                onClick={() => {
-                  setOnlyFavs(!onlyFavs)
-                  // !onlyFavs && setPage({...page, start: 0})
-                }}
-                variant="outline"
-                borderRadius="0 5px 5px 0"
-              >
-                <Icon
-                  as={onlyFavs ? AiFillStar : AiOutlineStar}
-                  boxSize={{ base: 4, lg: 6 }}
-                />
-              </Button>
-            </InputRightElement>
-          </InputGroup>
-          <VStack
-            w="100%"
-            flexGrow={1}
-            p={{ lg: "5px" }}
-            overflowY="scroll"
-            css={utils.customScrollBar}
+          <MiniFridge
+            totals={{
+              qty: fridgeItems.totalQTY,
+              price: fridgeItems.totalPrice,
+            }}
+            closeFridge={() => toggle(false)}
           >
-            {searchedItem.results.map((ing) => {
+            {fridgeItems.choosenItems.map((product) => {
               return (
-                <Skeleton
-                  borderRadius={10}
-                  w="95%"
-                  key={ing.idIngredient}
-                  isLoaded={!loadingIngredients}
-                >
-                  <IngItem
-                    strIngredient={ing.strIngredient}
-                    idIngredient={ing.idIngredient}
-                    addItem={() =>
-                      addItem(ing.idIngredient, ing.strIngredient, "add")
-                    }
-                    ingredient={ing}
-                    isBTNDisabled={ing.idIngredient === isItemLoading}
-                  />
-                </Skeleton>
+                <>
+                  <Skeleton
+                    key={product.idIngredient}
+                    isLoaded={!(product.idIngredient === isItemLoading)}
+                    w="100%"
+                    borderRadius={5}
+                  >
+                    <FridgeItem
+                      strIngredient={product.strIngredient}
+                      idIngredient={product.idIngredient}
+                      qty={product.qty}
+                      removeItem={() =>
+                        addItem(
+                          product.idIngredient,
+                          product.strIngredient,
+                          "remove"
+                        )
+                      }
+                    />
+                    <Divider mt={2} />
+                  </Skeleton>
+                </>
               );
             })}
+          </MiniFridge>
+        </Flex>
+        <Flex w={{ base: "100%", lg: "60%" }} mt="25px">
+          <VStack w="95%" spacing={5}>
+            <MarketToolBar
+              totalPrice={fridgeItems.totalPrice}
+              totalQTY={fridgeItems.totalQTY}
+              openFridge={() => toggle(true)}
+              forgetItems={() => setItems({})}
+              openModal={() => onOpen()}
+            />
+            <InputGroup size="md">
+              <Input
+                value={search}
+                placeholder="Search"
+                onChange={(e) => setSearch(e.target.value)}
+                type="text"
+              />
+              <InputRightElement right="12px">
+                <Button
+                  h="100%"
+                  size="sm"
+                  onClick={() => {
+                    setSearching(search);
+                    setPage({ start: 0, end: 10 });
+                  }}
+                  variant="outline"
+                  borderRadius="0"
+                >
+                  <Icon as={BsSearch} />
+                </Button>
+                <Button
+                  h="100%"
+                  w="100%"
+                  size="sm"
+                  onClick={() => {
+                    setOnlyFavs(!onlyFavs);
+                    // !onlyFavs && setPage({...page, start: 0})
+                  }}
+                  variant="outline"
+                  borderRadius="0 5px 5px 0"
+                >
+                  <Icon
+                    as={onlyFavs ? AiFillStar : AiOutlineStar}
+                    boxSize={{ base: 4, lg: 6 }}
+                  />
+                </Button>
+              </InputRightElement>
+            </InputGroup>
+            <VStack
+              w="100%"
+              flexGrow={1}
+              p={{ lg: "5px" }}
+              overflowY="scroll"
+              css={utils.customScrollBar}
+            >
+              {searchedItem.results.map((ing) => {
+                return (
+                  <Skeleton
+                    borderRadius={10}
+                    w="95%"
+                    key={ing.idIngredient}
+                    isLoaded={!loadingIngredients}
+                  >
+                    <IngItem
+                      strIngredient={ing.strIngredient}
+                      idIngredient={ing.idIngredient}
+                      addItem={() =>
+                        addItem(ing.idIngredient, ing.strIngredient, "add")
+                      }
+                      ingredient={ing}
+                      isBTNDisabled={ing.idIngredient === isItemLoading}
+                    />
+                  </Skeleton>
+                );
+              })}
+            </VStack>
+            {/* <PageSelector setPage={() => setPage()}/> */}
+            <HStack spacing={6}>
+              <Button
+                size="xs"
+                variant="outline"
+                onClick={() =>
+                  setPage(
+                    utils.turnPage("prev", page, searchedItem.totalResults)
+                  )
+                }
+                disabled={page.start - 10 < -1}
+              >
+                <Icon as={CgPlayTrackPrev} boxSize={{ base: 4, lg: 6 }} />
+                <Text fontSize="xs">Prev</Text>
+              </Button>
+              <Text>
+                {page.start + 1} to{" "}
+                {page.end > searchedItem.totalResults
+                  ? searchedItem.totalResults
+                  : page.end}{" "}
+                ({searchedItem.totalResults})
+              </Text>
+              <Button
+                size="xs"
+                variant="outline"
+                onClick={() =>
+                  setPage(
+                    utils.turnPage("next", page, searchedItem.totalResults)
+                  )
+                }
+                disabled={
+                  searchedItem.totalResults < 10 ||
+                  page.end === searchedItem.totalResults
+                }
+              >
+                <Text fontSize="xs">Next</Text>
+                <Icon as={CgPlayTrackNext} boxSize={{ base: 4, lg: 6 }} />
+              </Button>
+            </HStack>
           </VStack>
-          {/* <PageSelector setPage={() => setPage()}/> */}
-          <HStack spacing={6}>
-            <Button
-              size="xs"
-              variant="outline"
-              onClick={() =>
-                setPage(utils.turnPage("prev", page, searchedItem.totalResults))
-              }
-              disabled={page.start - 10 < -1}
-            >
-              <Icon as={CgPlayTrackPrev} boxSize={{ base: 4, lg: 6 }} />
-              <Text fontSize="xs">Prev</Text>
-            </Button>
-            <Text>
-              {page.start + 1} to{" "}
-              {page.end > searchedItem.totalResults
-                ? searchedItem.totalResults
-                : page.end}{" "}
-              ({searchedItem.totalResults})
-            </Text>
-            <Button
-              size="xs"
-              variant="outline"
-              onClick={() =>
-                setPage(utils.turnPage("next", page, searchedItem.totalResults))
-              }
-              disabled={
-                searchedItem.totalResults < 10 ||
-                page.end === searchedItem.totalResults
-              }
-            >
-              <Text fontSize="xs">Next</Text>
-              <Icon as={CgPlayTrackNext} boxSize={{ base: 4, lg: 6 }} />
-            </Button>
-          </HStack>
-        </VStack>
+        </Flex>
       </Flex>
-    </Flex>
     </>
   );
 };

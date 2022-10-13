@@ -9,21 +9,32 @@ import { Ingredient } from "types";
 interface ProductsState {
   selectedProducts: Ingredient[];
   favs: Record<Ingredient['idIngredient'], boolean>
+  products: Record<Ingredient['idIngredient'], number>
   // favs: {}
 }
 
 // Define the initial state using that type
 const initialState: ProductsState = {
   selectedProducts: [],
-  favs: {}
+  favs: {},
+  products: {}
 };
 
 export const productsSlice = createSlice({
   name: "products",
   initialState,
   reducers: {
-    addProduct: (state, action: PayloadAction<Ingredient>) => {
-      state.selectedProducts = [...state.selectedProducts, action.payload];
+    // addProduct: (state, action: PayloadAction<Ingredient>) => {
+    //   state.selectedProducts = [...state.selectedProducts, action.payload];
+    // },
+    addProduct: (state, action: PayloadAction<[string, {qty: number, price: number}][]>) => {
+      action.payload.forEach(item => {
+        state.products = {
+          ...state.products,
+          [item[0]]: state.products[item[0]] ? state.products[item[0]] + item[1].qty : item[1].qty
+        }
+      
+      })
     },
     deleteProduct: (state, action: PayloadAction<string>) => {
       state.selectedProducts = state.selectedProducts.filter(

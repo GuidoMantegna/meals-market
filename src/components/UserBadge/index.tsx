@@ -17,9 +17,13 @@ import { RiFridgeFill, RiArrowUpSFill } from "react-icons/ri";
 
 import AvatarImg from "../../images/GuidoMantegna-avatar.jpg";
 
-interface IUserBadgeProps {}
+interface IUserBadgeProps {
+  items: number;
+  favs: number;
+  value: number;
+}
 
-const UserBadge: React.FunctionComponent<IUserBadgeProps> = (props) => {
+const UserBadge: React.FunctionComponent<IUserBadgeProps> = ({items, favs, value}) => {
   return (
     <Center flexDirection="column" pos='relative'>
       <Center bgColor="blackAlpha.200" mb='12px' borderRadius="50%" p={1}>
@@ -44,19 +48,19 @@ const UserBadge: React.FunctionComponent<IUserBadgeProps> = (props) => {
           <HStack>
             <Icon as={RiFridgeFill} boxSize={8} />
             <Text fontSize="sm" fontWeight="bold">
-              12 items
+              {items} {items < 1 ? "Items" : "Item"}
             </Text>
           </HStack>
           <HStack>
             <Icon as={FaCoins} boxSize={8} />
             <Text fontSize="sm" fontWeight="bold">
-              $9,15
+              ${value}
             </Text>
           </HStack>
           <HStack>
             <Icon as={AiFillStar} boxSize={8} />
             <Text fontSize="sm" fontWeight="bold">
-              12 items
+              {favs} {favs < 1 ? "Favs" : "Fav"}
             </Text>
           </HStack>
         </VStack>
