@@ -30,12 +30,16 @@ const UserBadge: React.FunctionComponent<IUserBadgeProps> = ({items, favs, value
         <Icon as={BiUserCircle} boxSize={6} color="white" />
       </Center>
       {/* <StatArrow type='increase' /> */}
-      <Icon as={RiArrowUpSFill} boxSize={8} color='white' pos='absolute' top='26px'/>
+      <Icon as={RiArrowUpSFill} boxSize={8} /*color='white'*/ pos='absolute' top='26px'/>
       <Center
-        bgColor="white"
-        p="30px 0"
-        borderRadius="5px"
+        // bgColor="white"
+        border="1px solid #ccc"
+        // w={{base: "90%", sm: "50%", lg: "90%"}}
+        borderRadius="15px"
         flexDirection="column"
+        boxShadow="2px 3px 3px rgba(100, 100, 100, .5)"
+        p="30px 0"
+        // borderRadius="5px"
         width="-webkit-fit-content"
       >
         <Center flexDirection="column" p="0 40px 20px 40px">
@@ -54,7 +58,7 @@ const UserBadge: React.FunctionComponent<IUserBadgeProps> = ({items, favs, value
           <HStack>
             <Icon as={FaCoins} boxSize={8} />
             <Text fontSize="sm" fontWeight="bold">
-              ${value}
+              ${value.toFixed(2)}
             </Text>
           </HStack>
           <HStack>

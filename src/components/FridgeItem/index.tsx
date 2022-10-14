@@ -27,21 +27,16 @@ const FridgeItem: React.FunctionComponent<IFridgeItemProps> = ({
   return (
     <Flex width="100%" justifyContent="space-between" alignItems="center">
       <HStack>
-        <Icon as={GiIceCube} boxSize={{base: 6, lg:8}} />
-        <Text fontSize={{base: "xs", lg:"sm"}} fontWeight="bold">
-          <>
-          {strIngredient} 
-          </>
+        <Icon as={GiIceCube} boxSize={{ base: 6, lg: 8 }} />
+        <Text fontSize={{ base: "xs", lg: "sm" }} fontWeight="bold">
+          <>{strIngredient}</>
         </Text>
-        <Text fontSize={{base: "xs", lg:"sm"}} whiteSpace="nowrap">x {qty}</Text>
+        <Text fontSize={{ base: "xs", lg: "sm" }} whiteSpace="nowrap">
+          x {qty}
+        </Text>
       </HStack>
-      <Button
-        variant="ghost"
-        colorScheme="red"
-        size="xs"
-        onClick={removeItem}
-      >
-        <Icon as={ImCross} boxSize={{base: 3, lg:4}} />
+      <Button variant="ghost" colorScheme="red" size="xs" onClick={removeItem}>
+        <Icon as={ImCross} boxSize={{ base: 3, lg: 4 }} />
       </Button>
     </Flex>
   );

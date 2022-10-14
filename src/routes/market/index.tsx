@@ -5,7 +5,14 @@ import { useState, useMemo, useRef } from "react";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import { addProduct } from "store/features/products";
 // APP COMPONENTS
-import { IngItem, LoadingModal, MiniFridge, FridgeItem } from "components";
+import {
+  IngItem,
+  LoadingModal,
+  MiniFridge,
+  FridgeItem,
+  Alert,
+  LeftModal,
+} from "components";
 import { MarketToolBar, PageSelector } from "./components";
 // CHAKRA
 import {
@@ -128,7 +135,7 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
           <ModalBody>
             <Text textAlign="center">
               Are you sure you want to buy these {fridgeItems.totalQTY} for $
-              {fridgeItems.totalPrice}?
+              {fridgeItems.totalPrice.toFixed(2)}?
             </Text>
           </ModalBody>
 
@@ -160,19 +167,7 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
         </ModalContent>
       </Modal>
       <Flex pos="relative" justify="center" p={2} grow={1} overflow="hidden">
-        <Flex
-          w={{ base: "100%", lg: "40%" }}
-          h={{ base: "100%", lg: "initial" }}
-          pos={{ base: "fixed", lg: "initial" }}
-          zIndex={3}
-          bgColor={{ base: "blackAlpha.700", lg: "initial" }}
-          top={0}
-          transform={{
-            base: isFridgeOpen ? "initial" : "translateX(-100%)",
-            lg: "initial",
-          }}
-          transition=".5s all"
-        >
+        <LeftModal isOpen={isFridgeOpen}>
           <MiniFridge
             totals={{
               qty: fridgeItems.totalQTY,
@@ -207,7 +202,8 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
               );
             })}
           </MiniFridge>
-        </Flex>
+        </LeftModal>
+        {/* </Flex> */}
         <Flex w={{ base: "100%", lg: "60%" }} mt="25px">
           <VStack w="95%" spacing={5}>
             <MarketToolBar
@@ -282,6 +278,13 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
                   </Skeleton>
                 );
               })}
+              {onlyFavs && searchedItem.totalResults === 0 && (
+                <Alert
+                  status="warning"
+                  title="You have not added favs!"
+                  description="Start faving if you want ★"
+                />
+              )}
             </VStack>
             {/* <PageSelector setPage={() => setPage()}/> */}
             <HStack spacing={6}>

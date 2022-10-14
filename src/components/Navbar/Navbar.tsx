@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Link as RouterLink, useLocation } from "react-router-dom";
+import { Link as RouterLink, useLocation, NavLink } from "react-router-dom";
 import Language from "../Language";
 import {
   Flex,
@@ -9,6 +9,16 @@ import {
   Link,
   useMediaQuery,
   useColorMode,
+  Drawer,
+  DrawerBody,
+  DrawerOverlay,
+  DrawerFooter,
+  DrawerCloseButton,
+  DrawerContent,
+  useDisclosure,
+  DrawerHeader,
+  Button,
+  VStack,
 } from "@chakra-ui/react";
 import { FiMenu } from "react-icons/fi";
 import { RiMapPinUserFill } from "react-icons/ri";
@@ -23,6 +33,8 @@ const Navbar: React.FunctionComponent<NavbarProps> = (props) => {
   const location = useLocation();
   const { colorMode } = useColorMode();
   const dispatch = useAppDispatch();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const btnRef = React.useRef(null);
 
   return (
     <>
@@ -34,6 +46,79 @@ const Navbar: React.FunctionComponent<NavbarProps> = (props) => {
         align="center"
         justify={"space-between"}
       >
+        <Drawer
+          isOpen={isOpen}
+          placement="left"
+          onClose={onClose}
+          finalFocusRef={btnRef}
+        >
+          <DrawerOverlay />
+          <DrawerContent>
+            <DrawerCloseButton />
+            {/* <DrawerHeader>Create your account</DrawerHeader> */}
+
+            <VStack spacing={4} mt="60px">
+              <HStack
+                fontSize={{ base: "sm", md: "md" }}
+                spacing={2}
+                divider={<StackDivider borderColor="gray.300" />}
+                justifyContent="center"
+              >
+                <Link
+                  as={RouterLink}
+                  to="/market"
+                  fontWeight={
+                    location.pathname === "/market" ? "semibold" : "light"
+                  }
+                  onClick={onClose}
+                >
+                  Market
+                </Link>
+                <Link
+                  as={RouterLink}
+                  to="/meals"
+                  fontWeight={
+                    location.pathname === "/meals" ? "semibold" : "light"
+                  }
+                  onClick={onClose}
+                >
+                  Meals
+                </Link>
+                <Link
+                  as={RouterLink}
+                  to="/fridge"
+                  fontWeight={
+                    location.pathname === "/fridge" ? "semibold" : "light"
+                  }
+                  onClick={onClose}
+                >
+                  Fridge
+                </Link>
+                <Link
+                  as={RouterLink}
+                  to="/facts"
+                  fontWeight={
+                    location.pathname === "/facts" ? "semibold" : "light"
+                  }
+                  onClick={onClose}
+                >
+                  Food Facts
+                </Link>
+              </HStack>
+              <HStack spacing={6} justify="center">
+                <Language />
+                <ColorModeSwitcher />
+              </HStack>
+            </VStack>
+
+            {/* <DrawerFooter>
+            <Button variant='outline' mr={3} onClick={onClose}>
+              Cancel
+            </Button>
+            <Button colorScheme='blue'>Save</Button>
+          </DrawerFooter> */}
+          </DrawerContent>
+        </Drawer>
         {isLarge ? (
           <>
             <HStack
@@ -85,7 +170,9 @@ const Navbar: React.FunctionComponent<NavbarProps> = (props) => {
           </>
         ) : (
           <>
-            <Icon as={FiMenu} boxSize={6} />
+            <Button onClick={onOpen} variant="unstyled">
+              <Icon as={FiMenu} boxSize={6} />
+            </Button>
             <Icon as={RiMapPinUserFill} boxSize={6} />
           </>
         )}

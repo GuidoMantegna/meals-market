@@ -10,3 +10,5 @@ export { default as LoadingModal } from './LoadingModal';
 export { default as IngItem } from './IngItem';
 export { default as MiniFridge } from './MiniFridge';
 export { default as FridgeItem } from './FridgeItem';
+export { default as Alert } from './Alert';
+export { default as LeftModal } from './LeftModal';
