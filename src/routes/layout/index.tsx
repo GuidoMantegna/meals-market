@@ -24,7 +24,7 @@ const Layout: React.FunctionComponent<LayoutProps> = (props) => {
         <Flex>
           <Navbar />
         </Flex>
-        <Flex /*align="center"*/ justify="center" p={2} grow={1} overflow='hidden'>
+        <Flex /*align="center"*/ justify="center" /*p={2}*/ grow={1} overflow='hidden'>
           {/* {isLargerThan1280 && (
             <Flex grow={1} justify="center">
               <MiniFridge />

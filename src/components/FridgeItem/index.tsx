@@ -4,6 +4,7 @@ import { GiIceCube } from "react-icons/gi";
 import { ImCross } from "react-icons/im";
 import { useAppDispatch } from "store/hooks";
 import { deleteProduct } from "store/features/products";
+import {utils} from "utils";
 
 interface IFridgeItemProps {
   strIngredient: string;
@@ -33,6 +34,9 @@ const FridgeItem: React.FunctionComponent<IFridgeItemProps> = ({
         </Text>
         <Text fontSize={{ base: "xs", lg: "sm" }} whiteSpace="nowrap">
           x {qty}
+        </Text>
+        <Text fontSize={{ base: "xs", lg: "sm" }} whiteSpace="nowrap">
+          - {qty * utils.stringToInt(strIngredient)}
         </Text>
       </HStack>
       <Button variant="ghost" colorScheme="red" size="xs" onClick={removeItem}>

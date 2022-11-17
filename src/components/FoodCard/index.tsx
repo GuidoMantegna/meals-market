@@ -162,7 +162,7 @@ const FoodCard: React.FunctionComponent<IFoodCardProps> = ({
                 <Heading as="h2" size="md">
                   {title}
                 </Heading>
-                <Link to={`/market/${id}`}>
+                <Link to={`/meals/${id}`}>
                 {/* <Link to={id}> */}
                   + More Info
                 </Link>

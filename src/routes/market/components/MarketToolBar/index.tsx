@@ -1,4 +1,7 @@
 import * as React from "react";
+// REDUX
+import { useAppDispatch } from "store/hooks";
+import {toggleUser } from "store/features/toggle";
 // CHAKRA
 import { Button, Icon, Text, HStack, Box } from "@chakra-ui/react";
 // ICONS
@@ -19,6 +22,7 @@ const MarketToolBar: React.FunctionComponent<IMarketToolBarProps> = ({
   forgetItems,
   openModal,
 }) => {
+  const dispatch = useAppDispatch()
   return (
     <>
       <HStack justify="space-around" w="100%">
@@ -26,7 +30,8 @@ const MarketToolBar: React.FunctionComponent<IMarketToolBarProps> = ({
           <Button
             variant="ghost"
             pos="relative"
-            onClick={openFridge}
+            // onClick={openFridge}
+            onClick={() => dispatch(toggleUser())}
             colorScheme={totalQTY === 0 ? "facebook" : "teal"}
           >
             <Icon as={RiFridgeFill} boxSize={{ base: 6, lg: 8 }} />

@@ -8,6 +8,7 @@ import {
   HStack,
   VStack,
   StatArrow,
+  useColorMode,
 } from "@chakra-ui/react";
 import * as React from "react";
 import { BiUserCircle, BiFridge } from "react-icons/bi";
@@ -24,31 +25,30 @@ interface IUserBadgeProps {
 }
 
 const UserBadge: React.FunctionComponent<IUserBadgeProps> = ({items, favs, value}) => {
+  const { colorMode } = useColorMode();
   return (
-    <Center flexDirection="column" pos='relative'>
-      <Center bgColor="blackAlpha.200" mb='12px' borderRadius="50%" p={1}>
+    <>
+    <Center flexDirection="column" pos='relative' w="100%">
+      {/* <Center bgColor="blackAlpha.200" mb='12px' borderRadius="50%" p={1}>
         <Icon as={BiUserCircle} boxSize={6} color="white" />
       </Center>
-      {/* <StatArrow type='increase' /> */}
-      <Icon as={RiArrowUpSFill} boxSize={8} /*color='white'*/ pos='absolute' top='26px'/>
-      <Center
-        // bgColor="white"
+      <Icon as={RiArrowUpSFill} boxSize={8} pos='absolute' top='26px'/> */}
+      {/* <Center
+        bgColor={colorMode === "dark" ? "blue.900" : ''}
         border="1px solid #ccc"
-        // w={{base: "90%", sm: "50%", lg: "90%"}}
         borderRadius="15px"
         flexDirection="column"
         boxShadow="2px 3px 3px rgba(100, 100, 100, .5)"
         p="30px 0"
-        // borderRadius="5px"
         width="-webkit-fit-content"
-      >
-        <Center flexDirection="column" p="0 40px 20px 40px">
+      > */}
+        <Center flexDirection="column" /*p="0 40px 20px 40px"*/>
           <Avatar src={AvatarImg} size="xl" />
           <Heading whiteSpace="nowrap" as='h2' size='lg'>Guido Mantegna</Heading>
           <Text fontSize="sm">example@example.com</Text>
         </Center>
-        <Divider />
-        <VStack flexDirection="column" p="20px 40px 0 40px" spacing={4}>
+        <Divider m="10px 0"/>
+        <VStack flexDirection="column" p="10px" spacing={4}>
           <HStack>
             <Icon as={RiFridgeFill} boxSize={8} />
             <Text fontSize="sm" fontWeight="bold">
@@ -69,7 +69,8 @@ const UserBadge: React.FunctionComponent<IUserBadgeProps> = ({items, favs, value
           </HStack>
         </VStack>
       </Center>
-    </Center>
+      </>
+    // </Center>
   );
 };
 

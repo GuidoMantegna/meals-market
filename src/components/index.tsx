@@ -12,3 +12,4 @@ export { default as MiniFridge } from './MiniFridge';
 export { default as FridgeItem } from './FridgeItem';
 export { default as Alert } from './Alert';
 export { default as LeftModal } from './LeftModal';
+export { default as NavLinks } from './NavLinks';

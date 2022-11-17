@@ -3,18 +3,21 @@ import type { RootState } from 'store'
 
 // Define a type for the slice state
 interface ToggleState {
-    fridge: boolean
+    fridge: boolean;
+    user: boolean;
   }
   
   // Define the initial state using that type
   const initialState: ToggleState = {
     fridge: false,
+    user: false
   }
 
 export const toggleSlice = createSlice({
   name: 'counter',
   initialState: {
     fridge: false,
+    user: false,
   },
   reducers: {
     toggleFridge: (state) => {
@@ -23,6 +26,13 @@ export const toggleSlice = createSlice({
       // which detects changes to a "draft state" and produces a brand new
       // immutable state based off those changes
       state.fridge = !state.fridge
+    },
+    toggleUser: (state) => {
+      // Redux Toolkit allows us to write "mutating" logic in reducers. It
+      // doesn't actually mutate the state because it uses the Immer library,
+      // which detects changes to a "draft state" and produces a brand new
+      // immutable state based off those changes
+      state.user = !state.user
     },
     // decrement: (state) => {
     //   state.value -= 1
@@ -34,7 +44,7 @@ export const toggleSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { toggleFridge } = toggleSlice.actions
+export const { toggleFridge, toggleUser } = toggleSlice.actions
 // Other code such as selectors can use the imported `RootState` type
 export const selectCount = (state: RootState) => state.counter
 

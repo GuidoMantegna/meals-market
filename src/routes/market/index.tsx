@@ -35,6 +35,7 @@ import {
   ModalHeader,
   ModalFooter,
   useDisclosure,
+  Box,
 } from "@chakra-ui/react";
 // ICONS
 import { BsSearch } from "react-icons/bs";
@@ -51,13 +52,14 @@ interface IMarketProps {}
 const Market: React.FunctionComponent<IMarketProps> = (props) => {
   const dispatch = useAppDispatch();
   const favs = useAppSelector((state) => state.products.favs);
+  const user = useAppSelector((state) => state.toggle.user);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { loadingIngredients, ingError, ingredients } = useIngredients(),
     [search, setSearch] = useState<string>(""),
     [searching, setSearching] = useState<string>(""),
     [items, setItems] = useState<
-      Record<Ingredient["idIngredient"], { qty: number; price: number }>
+      Record<Ingredient["idIngredient"], { qty: number; price: number, ingredient: string }>
     >({}),
     [onlyFavs, setOnlyFavs] = useState(false),
     [page, setPage] = useState({ start: 0, end: 10 }),
@@ -93,7 +95,7 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
       0
     );
     const totalPrice = Object.entries(items).reduce(
-      (acc, curr) => acc + (curr[1].qty > 0 ? curr[1].price : 0),
+      (acc, curr) => acc + curr[1].qty * curr[1].price ,
       0
     );
 
@@ -115,9 +117,8 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
             : items[idIngredient] && action === "remove"
             ? 0
             : 1,
-        price: items[idIngredient]
-          ? items[idIngredient].price + utils.stringToInt(strIngredient)
-          : utils.stringToInt(strIngredient),
+        price: utils.stringToInt(strIngredient),
+        ingredient: strIngredient
       },
     });
     setTimeout(() => setLoadingItem(""), 500);
@@ -127,7 +128,8 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
 
   return (
     <>
-      <Modal isOpen={isOpen} onClose={onClose}>
+      {/* <Modal isOpen={isOpen} onClose={onClose}> */}
+      <Modal isOpen={isOpen && fridgeItems.totalQTY !== 0} onClose={onClose}>
         <ModalOverlay />
         <ModalContent alignItems="center" w={{ base: "85%", lg: "100%" }}>
           <ModalHeader>Confirm buy</ModalHeader>
@@ -138,6 +140,43 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
               {fridgeItems.totalPrice.toFixed(2)}?
             </Text>
           </ModalBody>
+          <Box m='20px 0' w='75%'>
+
+            {/* <MiniFridge
+            totals={{
+              qty: fridgeItems.totalQTY,
+              price: fridgeItems.totalPrice,
+            }}
+            closeFridge={() => toggle(false)}
+            > */}
+            {fridgeItems.choosenItems.map((product) => {
+              return (
+                <>
+                  {/* <Skeleton
+                    key={product.idIngredient}
+                    isLoaded={!(product.idIngredient === isItemLoading)}
+                    w="100%"
+                    borderRadius={5}
+                    > */}
+                    <FridgeItem
+                      strIngredient={product.strIngredient}
+                      idIngredient={product.idIngredient}
+                      qty={product.qty}
+                      removeItem={() =>
+                        addItem(
+                          product.idIngredient,
+                          product.strIngredient,
+                          "remove"
+                          )
+                        }
+                        />
+                    {/* <Divider mt={2} /> */}
+                  {/* </Skeleton> */}
+                </>
+              );
+            })}
+          {/* </MiniFridge> */}
+            </Box>
 
           <ModalFooter>
             <Button
@@ -156,6 +195,7 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
                 colorScheme="green"
                 onClick={() => {
                   dispatch(addProduct(Object.entries(items)));
+                  // console.log(Object.entries(items));
                   setItems({});
                   onClose();
                 }}
@@ -166,8 +206,8 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
           </ModalFooter>
         </ModalContent>
       </Modal>
-      <Flex pos="relative" justify="center" p={2} grow={1} overflow="hidden">
-        <LeftModal isOpen={isFridgeOpen}>
+      <Flex pos="relative" justify="center" grow={1} overflow="hidden">
+        {/* <LeftModal isOpen={user}>
           <MiniFridge
             totals={{
               qty: fridgeItems.totalQTY,
@@ -202,9 +242,9 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
               );
             })}
           </MiniFridge>
-        </LeftModal>
+        </LeftModal> */}
         {/* </Flex> */}
-        <Flex w={{ base: "100%", lg: "60%" }} mt="25px">
+        <Flex w={{ base: "100%", /*lg: "60%"*/ }} mt="25px" justify='center'>
           <VStack w="95%" spacing={5}>
             <MarketToolBar
               totalPrice={fridgeItems.totalPrice}
