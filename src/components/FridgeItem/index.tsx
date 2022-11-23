@@ -2,15 +2,14 @@ import * as React from "react";
 import { Flex, Icon, Text, Button, HStack } from "@chakra-ui/react";
 import { GiIceCube } from "react-icons/gi";
 import { ImCross } from "react-icons/im";
-import { useAppDispatch } from "store/hooks";
-import { deleteProduct } from "store/features/products";
-import {utils} from "utils";
+import { utils } from "utils";
 
 interface IFridgeItemProps {
   strIngredient: string;
   idIngredient: string;
   qty: number;
   removeItem: () => void;
+  hasPrice?: boolean;
 }
 
 const FridgeItem: React.FunctionComponent<IFridgeItemProps> = ({
@@ -18,13 +17,8 @@ const FridgeItem: React.FunctionComponent<IFridgeItemProps> = ({
   idIngredient,
   qty,
   removeItem,
+  hasPrice,
 }) => {
-  const dispatch = useAppDispatch();
-
-  // const handleDelete = () => {
-  //   dispatch(deleteProduct(idIngredient));
-  // };
-
   return (
     <Flex width="100%" justifyContent="space-between" alignItems="center">
       <HStack>
@@ -35,9 +29,11 @@ const FridgeItem: React.FunctionComponent<IFridgeItemProps> = ({
         <Text fontSize={{ base: "xs", lg: "sm" }} whiteSpace="nowrap">
           x {qty}
         </Text>
-        <Text fontSize={{ base: "xs", lg: "sm" }} whiteSpace="nowrap">
-          - {qty * utils.stringToInt(strIngredient)}
-        </Text>
+        {hasPrice && (
+          <Text fontSize={{ base: "xs", lg: "sm" }} whiteSpace="nowrap">
+            - ${qty * utils.stringToInt(strIngredient)}
+          </Text>
+        )}
       </HStack>
       <Button variant="ghost" colorScheme="red" size="xs" onClick={removeItem}>
         <Icon as={ImCross} boxSize={{ base: 3, lg: 4 }} />

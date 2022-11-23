@@ -1,7 +1,7 @@
 import * as React from "react";
 // REDUX
 import { useAppDispatch } from "store/hooks";
-import {toggleUser } from "store/features/toggle";
+import { toggleUser } from "store/features/toggle";
 // CHAKRA
 import { Button, Icon, Text, HStack, Box } from "@chakra-ui/react";
 // ICONS
@@ -10,7 +10,7 @@ import { RiFridgeFill } from "react-icons/ri";
 interface IMarketToolBarProps {
   totalQTY: number;
   totalPrice: number;
-  openFridge: () => void;
+  // openFridge: () => void;
   forgetItems: () => void;
   openModal: () => void;
 }
@@ -18,11 +18,11 @@ interface IMarketToolBarProps {
 const MarketToolBar: React.FunctionComponent<IMarketToolBarProps> = ({
   totalPrice,
   totalQTY,
-  openFridge,
+  // openFridge,
   forgetItems,
   openModal,
 }) => {
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
   return (
     <>
       <HStack justify="space-around" w="100%">
