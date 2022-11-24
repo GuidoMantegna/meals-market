@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useParams } from "react-router-dom";
 import {
   Box,
   Text,
@@ -15,7 +15,7 @@ interface IFoodCardProps {
   img?: string;
   status: string;
   id: string;
-  category: string;
+  // category: string;
 }
 
 const FoodCard: React.FunctionComponent<IFoodCardProps> = ({
@@ -23,9 +23,10 @@ const FoodCard: React.FunctionComponent<IFoodCardProps> = ({
   img,
   status,
   id,
-  category,
+  // category,
 }) => {
   const { colorMode } = useColorMode();
+  const { meal } = useParams<string>();
 
   return (
     <>
@@ -58,7 +59,8 @@ const FoodCard: React.FunctionComponent<IFoodCardProps> = ({
                 p="3"
               >
                 <Heading as="h2" size="sm" textAlign="center" color="white">
-                  {category}
+                  {/* {meal?.charAt(0).toUpperCase()}{meal?.slice(1)} */}
+                  {meal}
                 </Heading>
               </Box>
             </Box>
@@ -68,7 +70,7 @@ const FoodCard: React.FunctionComponent<IFoodCardProps> = ({
                 <Heading as="h2" size={{ base: "xs", md: "md" }} m={{ md: "10px 0 5px "}}>
                   {title}
                 </Heading>
-                <Link to={`/meals/${id}`}><Text fontSize={{ base: "xs", md: "md" }}>+ More Info</Text></Link>
+                <Link to={`/meals/${meal}/${id}`}><Text fontSize={{ base: "xs", md: "md" }}>+ More Info</Text></Link>
               </VStack>
             </HStack>
           </Box>

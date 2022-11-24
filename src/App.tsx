@@ -15,10 +15,10 @@ export const App = () => (
   <ChakraProvider theme={theme}>
     <Routes>
       <Route path="/" element={<Layout />}>
-        <Route index element={<Home />} />
-        <Route path="/market" element={<Market />} />
-        <Route path="/meals" element={<Meals />} />
-        <Route path="/meals/:idMeal" element={<MealInfo />} />
+        <Route index element={<Market />} />
+        {/* <Route path="/market" element={<Market />} /> */}
+        <Route path="/meals/:meal" element={<Meals />} />
+        <Route path="/meals/:meal/:idMeal" element={<MealInfo />} />
         {/* <Route path="/market/*" element={<Market />}>
           <Route path="/:idMeal" element={<MealInfo />} />
         </Route> */}

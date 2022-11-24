@@ -17,16 +17,16 @@ const NavLinks: React.FunctionComponent<INavLinksProps> = ({ onClose }) => {
     >
       <Link
         as={RouterLink}
-        to="/market"
-        fontWeight={location.pathname === "/market" ? "semibold" : "light"}
+        to="/"
+        fontWeight={location.pathname === "/" ? "semibold" : "light"}
         onClick={onClose}
       >
         Market
       </Link>
       <Link
         as={RouterLink}
-        to="/meals"
-        fontWeight={location.pathname === "/meals" ? "semibold" : "light"}
+        to="/meals/Beef"
+        fontWeight={location.pathname.includes("meals") ? "semibold" : "light"}
         onClick={onClose}
       >
         Meals

@@ -1,5 +1,6 @@
 import * as React from "react";
 import { useState, useEffect, Suspense } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 // APP COMPONENTS
 import { FoodCard } from "components";
 // CHAKRA COMPONENTS
@@ -29,18 +30,19 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
     "",
     "multipleMeals"
   );
-  const [category, setCategory] = useState("Beef");
+  // const [category, setCategory] = useState("Beef");
+  const { meal } = useParams<string>();
   const [isMedium, isXLarge, is2XL] = useMediaQuery(["(min-width: 768px)", "(min-width: 1280px)", "(min-width: 1536px)"]);
 
   const handleChange = (e: any) => {
     fetchMeals(
       `https://www.themealdb.com/api/json/v1/1/filter.php?c=${e.target.value}`
     );
-    setCategory(e.target.value);
+    // setCategory(e.target.value);
   };
 
   useEffect(() => {
-    fetchMeals(`https://www.themealdb.com/api/json/v1/1/filter.php?c=Beef`);
+    fetchMeals(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${meal}`);
   }, []);
 
   return (
@@ -57,7 +59,7 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
           >
             {categories?.map((category: Category) => {
               return (
-                <option key={category.idCategory} value={category.strCategory}>
+                <option key={category.idCategory} value={category.strCategory} selected={category.strCategory === meal}>
                   {category.strCategory}
                 </option>
               );
@@ -126,7 +128,7 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
                         img={meal.strMealThumb}
                         id={meal.idMeal}
                         status="complete"
-                        category={category}
+                        // category={category}
                       />
                     </Suspense>
                   </Skeleton>

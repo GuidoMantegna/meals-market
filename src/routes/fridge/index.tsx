@@ -82,7 +82,7 @@ const Fridge: React.FunctionComponent<IFridgeProps> = (props) => {
                 title="Your fridge is empty!"
                 description=""
               >
-                <NavLink to="/market">go to market</NavLink>
+                <NavLink to="/">go to market</NavLink>
               </Alert>
             )}
             {fridgeItems.products.map((item) => {
