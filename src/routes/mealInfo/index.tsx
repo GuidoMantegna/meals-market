@@ -42,21 +42,26 @@ const MealInfo: React.FunctionComponent<IMealInfoProps> = (props) => {
         Return
       </Button> */}
         <HStack m="10px 15px">
-          <Link to={`/meals/${meal}`}>Meals /</Link>
-          <Text fontWeight="bold">{meal}</Text>
+          <Link to={`/meals/${meal}`} style={{ fontSize: ".85em" }}>
+            Meals /
+          </Link>
+          <Text fontWeight="bold" fontSize="sm">
+            {meal}
+          </Text>
         </HStack>
-        <Center h="100%">
+        <Center h="90%">
           <Box
-            w={{ base: "85%", lg: "65%" }}
+            // display={{ lg: "flex" }}
+            w={{ base: "90%", lg: "75%", '2xl': "75%" }}
             borderRadius={10}
             border={
               colorMode === "light" ? "1px solid #CDCDCD" : "1px solid #5b5b5b"
             }
-            p={{base: "15px", md: "30px 10px"}}
+            p={{ base: "10px", md: "30px 10px" }}
             bgColor={colorMode === "light" ? "white" : "gray.700"}
           >
-            <Center>
-              <AspectRatio maxW="450px" w="100%" ratio={1}>
+            <Center w="100%">
+              <AspectRatio maxW={{base: "450px", md: "initial"}} w={{base: "95%", md: "100%"}} ratio={{base: 1, lg: 16/9}}>
                 <iframe
                   title="naruto"
                   src={meals && meals[0].strYoutube}
@@ -64,29 +69,32 @@ const MealInfo: React.FunctionComponent<IMealInfoProps> = (props) => {
                 />
               </AspectRatio>
             </Center>
-            <HStack spacing={6} m="10px 0">
-              <Heading size={{ base: "sm", lg: "md" }}>
-                {meals && meals[0].strMeal}
-              </Heading>
-              <HStack>
-                {" "}
-                <Icon as={GoLocation} boxSize={4} />
-                <Text fontSize="sm">{meals && meals[0].strArea}</Text>
+            <Box>
+              <HStack spacing={6} m="10px 0">
+                <Heading size={{ base: "sm", lg: "md" }}>
+                  {meals && meals[0].strMeal}
+                </Heading>
+                <HStack>
+                  {" "}
+                  <Icon as={GoLocation} boxSize={4} />
+                  <Text fontSize="sm">{meals && meals[0].strArea}</Text>
+                </HStack>
               </HStack>
-            </HStack>
-            <HStack
-              wrap="wrap"
-              divider={<StackDivider borderColor="gray.200" />}
-            >
-              {meals &&
-                meals[0].ingredients.map((ing) => {
-                  return (
-                    <Text key={ing[0]} fontSize="xs" whiteSpace="nowrap">
-                      {ing[1]}
-                    </Text>
-                  );
-                })}
-            </HStack>
+              <HStack
+                wrap="wrap"
+                divider={<StackDivider borderColor="gray.200" />}
+                spacing={1}
+              >
+                {meals &&
+                  meals[0].ingredients.map((ing) => {
+                    return (
+                      <Text key={ing[0]} fontSize="xs" whiteSpace="nowrap">
+                        {ing[1]}
+                      </Text>
+                    );
+                  })}
+              </HStack>
+            </Box>
           </Box>
         </Center>
       </Skeleton>
