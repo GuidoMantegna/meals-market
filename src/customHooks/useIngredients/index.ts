@@ -5,13 +5,14 @@ const axios = require("axios");
 const useIngredients = () => {
   const [loadingIngredients, setLoadingIngredients] = useState(false);
   const [ingredients, setIngredients] = useState<Ingredient[]>([]);
-  const [ingError, setIngError] = useState();
+  const [ingError, setIngError] = useState(false);
 
   useEffect(() => {
     setLoadingIngredients(true);
     axios
       .get('https://www.themealdb.com/api/json/v1/1/list.php?i=list')
       .then((response: IngResponse) => {
+        console.log(response.data.meals);
         setIngredients(response.data.meals);
         setLoadingIngredients(false);
       })

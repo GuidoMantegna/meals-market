@@ -1,6 +1,6 @@
 import * as React from "react";
 import "./styles.scss";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 // REDUX
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import { addProduct } from "store/features/products";
@@ -65,6 +65,12 @@ const Market: React.FunctionComponent<IMarketProps> = (props) => {
     [page, setPage] = useState({ start: 0, end: 10 }),
     // [isFridgeOpen, toggle] = useState<boolean>(false),
     [isItemLoading, setLoadingItem] = useState<string>("");
+
+    useEffect(() => {
+      console.log({
+        ingError, ingredients, loadingIngredients
+      })
+    }, [loadingIngredients])
 
   const searchedItem = useMemo(() => {
     let results = [];

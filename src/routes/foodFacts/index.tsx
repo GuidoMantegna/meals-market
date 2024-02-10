@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import useIngredients from "customHooks/useIngredients";
 // CHAKRA
 import {
@@ -28,9 +28,14 @@ const FoodFacts: React.FunctionComponent<IFoodFactsProps> = (props) => {
   const { loadingIngredients, ingError, ingredients } = useIngredients();
   const { colorMode } = useColorMode();
   //   const [search, setSearch] = useState<string>("");
-  const [search, setSearch] = useState<Ingredient>(ingredients[0]);
+  const [search, setSearch] = useState<Ingredient[]>(ingredients);
   const [searching, setSearching] = useState<string>("1");
 
+  useEffect(() => {
+    console.log({
+      ingError, ingredients, loadingIngredients
+    })
+  }, [loadingIngredients])
   const searchedItem = useMemo(() => {
     // if (searching !== "") {
     return ingredients.filter((ing) => ing.idIngredient === searching)[0];
@@ -38,10 +43,12 @@ const FoodFacts: React.FunctionComponent<IFoodFactsProps> = (props) => {
     //   return ingredients[0];
     // }
   }, [searching, ingredients]);
+
+
   if (loadingIngredients) return <LoadingModal />;
   return (
     <>
-      <Flex flexDirection={"column"} w={{ base: "95%" }} /*h="100%"*/>
+      {/* <Flex flexDirection={"column"} w={{ base: "95%" }}>
         <Select
           m="10px 0"
           placeholder="Select option"
@@ -60,7 +67,7 @@ const FoodFacts: React.FunctionComponent<IFoodFactsProps> = (props) => {
           })}
         </Select>
 
-        {/* MAIN CONTAINER */}
+        {/* MAIN CONTAINER 
         <Box
           w="100%"
           borderRadius={10}
@@ -70,10 +77,10 @@ const FoodFacts: React.FunctionComponent<IFoodFactsProps> = (props) => {
           p={{ base: "15px", md: "30px 10px" }}
           bgColor={colorMode === "light" ? "white" : "gray.700"}
         >
-          {/* TITLE */}
+          {/* TITLE 
           <Flex paddingBottom="10px" w="100%" justifyContent="space-between" align="center">
             <Heading as="h2" size="sm">
-              {searchedItem.strIngredient}
+              {ingredients[0].strIngredient}
             </Heading>
             <Center
               borderRadius="50%"
@@ -85,7 +92,7 @@ const FoodFacts: React.FunctionComponent<IFoodFactsProps> = (props) => {
               padding="2"
             >
               <Image
-                src={`https://www.themealdb.com/images/ingredients/${searchedItem.strIngredient}-Small.png`}
+                src={`https://www.themealdb.com/images/ingredients/${ingredients[0].strIngredient}-Small.png`}
                 // alt={title}
                 w="80px"
                 // fallbackSrc={ImgFallback}
@@ -93,14 +100,14 @@ const FoodFacts: React.FunctionComponent<IFoodFactsProps> = (props) => {
             </Center>
           </Flex>
 
-          {/* BODY */}
+          {/* BODY 
           <Flex h="90%" overflowY="scroll">
             <Text fontSize="xs" textAlign="justify">
-              {searchedItem.strDescription}
+              {ingredients[0].strDescription}
             </Text>
           </Flex>
         </Box>
-      </Flex>
+      </Flex> */}
     </>
   );
 };
